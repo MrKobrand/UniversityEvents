@@ -1,1 +1,8 @@
-<Project Sdk="Microsoft.NET.Sdk"></Project>
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <DocumentationFile>./Domain.xml</DocumentationFile>
+  </PropertyGroup>
+  
+</Project>
