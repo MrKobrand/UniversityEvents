@@ -10,7 +10,7 @@ public class DetailedEventDto : EventDto
     /// <summary>
     /// Ссылка на изображение превью в файловом хранилище.
     /// </summary>
-    public string? PreviewImagePath { get; set; }
+    public string? PreviewImageLink { get; set; }
 
     /// <summary>
     /// Имя автора.
@@ -23,6 +23,11 @@ public class DetailedEventDto : EventDto
     public required string AuthorLastName { get; set; }
 
     /// <summary>
+    /// Отчество автора.
+    /// </summary>
+    public string? AuthorMiddleName { get; set; }
+
+    /// <summary>
     /// Уникальный идентификатор аватара автора.
     /// </summary>
     public long? AuthorAvatarId { get; set; }
@@ -33,7 +38,12 @@ public class DetailedEventDto : EventDto
     public string? AuthorAvatarLink { get; set; }
 
     /// <summary>
+    /// Спикеры.
+    /// </summary>
+    public required List<UserDto> Speakers { get; set; }
+
+    /// <summary>
     /// Участники.
     /// </summary>
-    public required IEnumerable<UserDto> Users { get; set; }
+    public required List<UserDto> Participants { get; set; }
 }

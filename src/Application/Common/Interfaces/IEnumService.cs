@@ -12,8 +12,8 @@ public interface IEnumService
     /// <summary>
     /// Получает состояния перечисления.
     /// </summary>
-    /// <typeparam name="TEnum">Тип перечисления. Должен наследовать <see cref="Enum" />.</typeparam>
-    /// <returns>Объект типа <see cref="EnumValueModel" />, описывающий состояния перечисления.</returns>
-    IEnumerable<EnumValueModel> GetEnumInfo<TEnum>()
+    /// <typeparam name="TEnum">Тип перечисления. Должен наследовать <see cref="Enum"/>.</typeparam>
+    /// <returns>Список объектов типа <see cref="EnumValueModel"/>, описывающий состояния перечисления.</returns>
+    List<EnumValueModel> GetEnumInfo<TEnum>()
         where TEnum : Enum;
 }

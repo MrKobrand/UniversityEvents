@@ -50,7 +50,22 @@ public class User : BaseEntity
     public long? AvatarId { get; set; }
 
     /// <summary>
+    /// Изображение аватара.
+    /// </summary>
+    public virtual Image? AvatarImage { get; set; }
+
+    /// <summary>
+    /// Мероприятия, в которых является автором.
+    /// </summary>
+    public virtual List<Event> EventsAsAuthor { get; set; } = default!;
+
+    /// <summary>
+    /// Мероприятия, в которых принимает участие как спикер.
+    /// </summary>
+    public virtual List<EventSpeaker> EventSpeakers { get; set; } = default!;
+
+    /// <summary>
     /// Мероприятия, в которых принимает участие.
     /// </summary>
-    public required List<Event> Events { get; set; }
+    public virtual List<EventParticipant> EventParticipants { get; set; } = default!;
 }

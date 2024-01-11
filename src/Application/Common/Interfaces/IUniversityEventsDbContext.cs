@@ -2,13 +2,14 @@ using System.Threading;
 using System.Threading.Tasks;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace Application.Common.Interfaces;
 
 /// <summary>
 /// Контекст базы данных.
 /// </summary>
-public interface IApplicationDbContext
+public interface IUniversityEventsDbContext
 {
     /// <summary>
     /// Мероприятия.
@@ -29,6 +30,26 @@ public interface IApplicationDbContext
     /// Пользователи.
     /// </summary>
     DbSet<User> Users { get; }
+
+    /// <summary>
+    /// Мероприятия и пользователи в качестве спикеров.
+    /// </summary>
+    DbSet<EventSpeaker> EventSpeakers { get; }
+
+    /// <summary>
+    /// Мероприятия и пользователи в качестве участников.
+    /// </summary>
+    DbSet<EventParticipant> EventParticipants { get; }
+
+    /// <summary>
+    /// Изображения.
+    /// </summary>
+    DbSet<Image> Images { get; }
+
+    /// <summary>
+    /// База данных.
+    /// </summary>
+    DatabaseFacade Database { get; }
 
     /// <summary>
     /// Сохраняет изменения в контексте.

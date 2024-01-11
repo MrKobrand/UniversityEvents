@@ -24,7 +24,7 @@ public class Role
     /// </summary>
     public static Role Administrator { get; } = new(RoleType.Administrator);
 
-    /// <inheritdoc />
+    /// <inheritdoc/>
     public override bool Equals(object? obj)
     {
         if (obj is null)
@@ -44,31 +44,31 @@ public class Role
         return other._roleType == _roleType;
     }
 
-    /// <inheritdoc />
+    /// <inheritdoc/>
     public override int GetHashCode()
     {
         return _roleType.GetHashCode();
     }
 
-    /// <inheritdoc />
+    /// <inheritdoc/>
     public override string ToString()
     {
         return _roleType.ToString();
     }
 
-    /// <inheritdoc />
+    /// <inheritdoc/>
     public static bool operator ==(Role l, Role r)
     {
         return l.Equals(r);
     }
 
-    /// <inheritdoc />
+    /// <inheritdoc/>
     public static bool operator !=(Role l, Role r)
     {
         return !l.Equals(r);
     }
 
-    /// <inheritdoc />
+    /// <inheritdoc/>
     public static bool operator <(Role l, Role r)
     {
         if (l is null || r is null)
@@ -79,7 +79,7 @@ public class Role
         return GetRoleLevel(l) < GetRoleLevel(r);
     }
 
-    /// <inheritdoc />
+    /// <inheritdoc/>
     public static bool operator >(Role l, Role r)
     {
         if (l is null || r is null)
@@ -90,7 +90,7 @@ public class Role
         return GetRoleLevel(l) > GetRoleLevel(r);
     }
 
-    /// <inheritdoc />
+    /// <inheritdoc/>
     public static bool operator <=(Role l, Role r)
     {
         if (l is null || r is null)
@@ -101,7 +101,7 @@ public class Role
         return GetRoleLevel(l) <= GetRoleLevel(r);
     }
 
-    /// <inheritdoc />
+    /// <inheritdoc/>
     public static bool operator >=(Role l, Role r)
     {
         if (l is null || r is null)
@@ -112,19 +112,19 @@ public class Role
         return GetRoleLevel(l) >= GetRoleLevel(r);
     }
 
-    /// <inheritdoc />
+    /// <inheritdoc/>
     public static implicit operator RoleType(Role r)
     {
         return r._roleType;
     }
 
-    /// <inheritdoc />
+    /// <inheritdoc/>
     public static implicit operator int(Role r)
     {
         return (int) r._roleType;
     }
 
-    /// <inheritdoc />
+    /// <inheritdoc/>
     public static implicit operator Role(RoleType r)
     {
         return new Role(r);

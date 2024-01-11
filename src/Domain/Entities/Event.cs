@@ -46,9 +46,14 @@ public class Event : BaseEntity
     public string? Content { get; set; }
 
     /// <summary>
-    /// Уникальный идентификатор изображения на превью в файловом хранилище.
+    /// Уникальный идентификатор изображения на превью.
     /// </summary>
     public long? PreviewImageId { get; set; }
+
+    /// <summary>
+    /// Превью-изображение.
+    /// </summary>
+    public virtual Image? PreviewImage { get; set; }
 
     /// <summary>
     /// Уникальный идентификатор категории мероприятия.
@@ -58,7 +63,7 @@ public class Event : BaseEntity
     /// <summary>
     /// Категория мероприятия.
     /// </summary>
-    public required EventCategory Category { get; set; }
+    public virtual EventCategory Category { get; set; } = default!;
 
     /// <summary>
     /// Уникальный идентификатор автора.
@@ -68,10 +73,15 @@ public class Event : BaseEntity
     /// <summary>
     /// Автор.
     /// </summary>
-    public required User Author { get; set; }
+    public virtual User Author { get; set; } = default!;
+
+    /// <summary>
+    /// Спикеры.
+    /// </summary>
+    public virtual List<EventSpeaker> EventSpeakers { get; set; } = default!;
 
     /// <summary>
     /// Участники.
     /// </summary>
-    public required List<User> Users { get; set; }
+    public virtual List<EventParticipant> EventParticipants { get; set; } = default!;
 }

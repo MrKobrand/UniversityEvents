@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Application.Common.Models;
 using Application.Contracts.Events.Dto;
 using Domain.Common;
-using Domain.Entities;
 
 namespace Application.Contracts.Events;
 
@@ -19,7 +18,7 @@ public interface IEventService
     /// <param name="id">Уникальный идентификатор мероприятия.</param>
     /// <param name="cancellationToken">Токен отмены операции.</param>
     /// <returns>Мероприятие.</returns>
-    Task<DetailedEventDto> GetAsync(long id, CancellationToken cancellationToken);
+    Task<DetailedEventDto?> GetAsync(long id, CancellationToken cancellationToken);
 
     /// <summary>
     /// Получает список мероприятий.
@@ -28,7 +27,7 @@ public interface IEventService
     /// <param name="search">Строка поиска.</param>
     /// <param name="cancellationToken">Токен отмены операции.</param>
     /// <returns>Список мероприятий.</returns>
-    Task<IEnumerable<DetailedEventDto>> GetListAsync(int? limit, string? search, CancellationToken cancellationToken);
+    Task<List<DetailedEventDto>> GetListAsync(int? limit, string? search, CancellationToken cancellationToken);
 
     /// <summary>
     /// Получает страницу мероприятий.
@@ -44,23 +43,23 @@ public interface IEventService
     /// Получает типы мероприятия.
     /// </summary>
     /// <returns>Список типов мероприятия.</returns>
-    IEnumerable<EnumValueModel> GetTypes();
+    List<EnumValueModel> GetTypes();
 
     /// <summary>
     /// Создает мероприятие.
     /// </summary>
-    /// <param name="event">Мероприятие, которое подлежит созданию.</param>
+    /// <param name="request">Запрос на создание мероприятия.</param>
     /// <param name="cancellationToken">Токен отмены операции.</param>
     /// <returns>Созданное мероприятие.</returns>
-    Task<EventDto> CreateAsync(Event @event, CancellationToken cancellationToken);
+    Task<EventDto> CreateAsync(CreateEventRequestDto request, CancellationToken cancellationToken);
 
     /// <summary>
     /// Обновляет мероприятие.
     /// </summary>
-    /// <param name="event">Мероприятие, которое подлежит обновлению.</param>
+    /// <param name="request">Запрос на обновление мероприятия.</param>
     /// <param name="cancellationToken">Токен отмены операции.</param>
     /// <returns>Обновленное мероприятие.</returns>
-    Task<EventDto> UpdateAsync(Event @event, CancellationToken cancellationToken);
+    Task<EventDto> UpdateAsync(UpdateEventRequestDto request, CancellationToken cancellationToken);
 
     /// <summary>
     /// Удаляет мероприятие.
@@ -68,5 +67,5 @@ public interface IEventService
     /// <param name="id">Уникальный идентификатор мероприятия.</param>
     /// <param name="cancellationToken">Токен отмены операции.</param>
     /// <returns>Удаленное мероприятие.</returns>
-    Task<EventDto> DeleteAsync(long id, CancellationToken cancellationToken);
+    Task<EventDto?> DeleteAsync(long id, CancellationToken cancellationToken);
 }

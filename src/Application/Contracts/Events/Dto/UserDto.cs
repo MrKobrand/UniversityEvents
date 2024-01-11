@@ -21,6 +21,11 @@ public class UserDto
     public required string LastName { get; set; }
 
     /// <summary>
+    /// Отчество.
+    /// </summary>
+    public string? MiddleName { get; set; }
+
+    /// <summary>
     /// Уникальный идентификатор аватара.
     /// </summary>
     public long? AvatarId { get; set; }

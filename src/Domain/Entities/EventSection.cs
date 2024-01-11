@@ -26,5 +26,5 @@ public class EventSection : BaseEntity
     /// <summary>
     /// Список категорий мероприятий.
     /// </summary>
-    public required List<EventCategory> Categories { get; set; }
+    public virtual List<EventCategory> Categories { get; set; } = default!;
 }

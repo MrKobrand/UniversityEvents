@@ -26,10 +26,10 @@ public class EventCategory : BaseEntity
     /// <summary>
     /// Раздел мероприятия.
     /// </summary>
-    public required EventSection Section { get; set; }
+    public virtual EventSection Section { get; set; } = default!;
 
     /// <summary>
     /// Мероприятия.
     /// </summary>
-    public required List<Event> Events { get; set; }
+    public virtual List<Event> Events { get; set; } = default!;
 }

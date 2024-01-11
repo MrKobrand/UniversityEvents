@@ -4,52 +4,52 @@ using Domain.Enums;
 namespace Application.Contracts.Events.Dto;
 
 /// <summary>
-/// Мероприятие.
+/// Запрос на обновление мероприятия.
 /// </summary>
-public class EventDto
+public class UpdateEventRequestDto
 {
     /// <summary>
-    /// Уникальный идентификатор.
+    /// Уникальный идентификатор мероприятия.
     /// </summary>
     public long Id { get; set; }
 
     /// <summary>
-    /// Тип.
+    /// Тип мероприятия.
     /// </summary>
     public EventType Type { get; set; }
 
     /// <summary>
-    /// Дата и время проведения.
+    /// Дата и время проведения мероприятия.
     /// </summary>
     public DateTimeOffset Date { get; set; }
 
     /// <summary>
-    /// Продолжительность.
+    /// Продолжительность мероприятия.
     /// </summary>
     public TimeSpan Duration { get; set; }
 
     /// <summary>
-    /// Место проведения.
+    /// Место проведения мероприятия.
     /// </summary>
     public required string Place { get; set; }
 
     /// <summary>
-    /// Тема.
+    /// Тема мероприятия.
     /// </summary>
     public required string Subject { get; set; }
 
     /// <summary>
-    /// Объявление.
+    /// Объявление мероприятия.
     /// </summary>
     public string? Announcement { get; set; }
 
     /// <summary>
-    /// Контент.
+    /// Контент мероприятия.
     /// </summary>
     public string? Content { get; set; }
 
     /// <summary>
-    /// Уникальный идентификатор изображения на превью в файловом хранилище.
+    /// Уникальный идентификатор изображения на превью мероприятия.
     /// </summary>
     public long? PreviewImageId { get; set; }
 
@@ -59,7 +59,7 @@ public class EventDto
     public long CategoryId { get; set; }
 
     /// <summary>
-    /// Уникальный идентификатор автора.
+    /// Уникальный идентификатор автора мероприятия.
     /// </summary>
     public long AuthorId { get; set; }
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
@@ -63,15 +64,20 @@ public class PaginatedList<T>
     /// <param name="source">Перечисляемый источник.</param>
     /// <param name="pageNumber">Номер страницы.</param>
     /// <param name="pageSize">Размер страницы.</param>
+    /// <param name="cancellationToken">Токен отмены операции.</param>
     /// <returns>Список с пагинацией.</returns>
-    public static async Task<PaginatedList<T>> CreateAsync(IQueryable<T> source, int pageNumber, int pageSize)
+    public static async Task<PaginatedList<T>> CreateAsync(
+        IQueryable<T> source,
+        int pageNumber,
+        int pageSize,
+        CancellationToken cancellationToken)
     {
-        var count = await source.CountAsync();
+        var count = await source.CountAsync(cancellationToken);
 
         var items = await source
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
 
         return new PaginatedList<T>(items, count, pageNumber, pageSize);
     }
