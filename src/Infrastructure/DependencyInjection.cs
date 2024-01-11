@@ -16,8 +16,7 @@ public static class DependencyInjection
     /// <param name="services">Контракт для коллекции сервисов.</param>
     /// <param name="configuration">Контракт для набора свойств конфигурации приложения "ключ-значение".</param>
     /// <returns>
-    /// Измененный контракт для коллекции сервисов,
-    /// содержащий зависимости <see cref="Infrastructure"/> проекта.
+    /// Измененный контракт для коллекции сервисов, содержащий зависимости <see cref="Infrastructure"/> проекта.
     /// </returns>
     public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
     {

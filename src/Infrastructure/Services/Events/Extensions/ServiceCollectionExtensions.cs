@@ -1,4 +1,5 @@
 using Application.Contracts.Events;
+using Infrastructure.Services.Extensions;
 using Infrastructure.Services.Files.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -17,6 +18,7 @@ public static class ServiceCollectionExtensions
     public static void TryAddEventService(this IServiceCollection services)
     {
         services.TryAddFileStorage();
+        services.TryAddEnumService();
         services.TryAddScoped<IEventService, EventService>();
     }
 }

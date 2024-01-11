@@ -13,8 +13,7 @@ public static class DependencyInjection
     /// </summary>
     /// <param name="services">Контракт для коллекции сервисов.</param>
     /// <returns>
-    /// Измененный контракт для коллекции сервисов,
-    /// содержащий зависимости <see cref="Application"/> проекта.
+    /// Измененный контракт для коллекции сервисов, содержащий зависимости <see cref="Application"/> проекта.
     /// </returns>
     public static IServiceCollection AddApplicationServices(this IServiceCollection services)
     {
