@@ -1,3 +1,4 @@
+using Infrastructure.Accounting.Extensions;
 using Infrastructure.Data.Extensions;
 using Infrastructure.Services.Events.Extensions;
 using Microsoft.Extensions.Configuration;
@@ -22,6 +23,7 @@ public static class DependencyInjection
     {
         services.AddUniversityEventsDbContext(configuration.GetConnectionString("UniversityEventsDbContext"));
 
+        services.TryAddAuthorization();
         services.TryAddEventService();
 
         return services;
