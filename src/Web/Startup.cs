@@ -71,7 +71,7 @@ public class Startup
             c.DocExpansion(DocExpansion.List);
         });
 
-
+        app.UseExceptionHandler(opt => { });
         app.UseMiddleware<ErrorLoggingMiddleware>();
 
         app.UseHttpsRedirection();

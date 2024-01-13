@@ -17,17 +17,20 @@ namespace Web.Infrastructure;
 /// </summary>
 public class AppExceptionHandler : IExceptionHandler
 {
+    private readonly bool _allowFullError;
+
     private readonly ILogger<AppExceptionHandler> _logger;
-    private readonly IConfiguration _configuration;
     private readonly Dictionary<Type, Func<HttpContext, Exception, Task>> _exceptionHandlers;
 
     /// <summary>
-    /// Инициализирует внутренние переменные класса.
+    /// Конструктор, подтягивающий зависимости через DI.
     /// </summary>
+    /// <param name="logger">Логгер событий.</param>
+    /// <param name="configuration">Контракт для набора свойств конфигурации приложения "ключ-значение".</param>
     public AppExceptionHandler(ILogger<AppExceptionHandler> logger, IConfiguration configuration)
     {
         _logger = logger;
-        _configuration = configuration;
+        _allowFullError = configuration.GetSection("AllowFullError").Get<bool>();
 
         _exceptionHandlers = new()
         {
@@ -35,8 +38,7 @@ public class AppExceptionHandler : IExceptionHandler
             [typeof(UnauthorizedException)] = HandleUnauthorizedException,
             [typeof(NotFoundException)] = HandleNotFoundException,
             [typeof(NotSupportedException)] = HandleNotSupportedException,
-            [typeof(NotImplementedException)] = HandleNotImplementedException,
-            [typeof(Exception)] = HandleException
+            [typeof(NotImplementedException)] = HandleNotImplementedException
         };
     }
 
@@ -45,13 +47,16 @@ public class AppExceptionHandler : IExceptionHandler
     {
         var exceptionType = exception.GetType();
 
-        if (_exceptionHandlers.ContainsKey(exceptionType))
+        if (_exceptionHandlers.TryGetValue(exceptionType, out var exceptionHandler))
         {
-            await _exceptionHandlers[exceptionType].Invoke(httpContext, exception);
+            await exceptionHandler.Invoke(httpContext, exception);
             return true;
         }
-
-        return false;
+        else
+        {
+            await HandleException(httpContext, exception);
+            return false;
+        }
     }
 
     private Task HandleArgumentException(HttpContext httpContext, Exception ex)
@@ -96,7 +101,7 @@ public class AppExceptionHandler : IExceptionHandler
         {
             Status = (int) code,
             Title = title,
-            Detail = _configuration.GetSection("AllowFullError").Get<bool>() ? ex.ToString() : null,
+            Detail = _allowFullError ? ex.ToString() : null,
         });
     }
 }

@@ -31,6 +31,9 @@ public class UniversityEventsDbContext : DbContext, IUniversityEventsDbContext
     /// <inheritdoc/>
     public DbSet<Image> Images => Set<Image>();
 
+    /// <inheritdoc/>
+    public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
+
     /// <summary>
     /// Конструктор, принимающий настройки контекста базы данных.
     /// </summary>

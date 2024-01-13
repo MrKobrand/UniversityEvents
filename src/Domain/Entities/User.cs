@@ -68,4 +68,9 @@ public class User : BaseEntity
     /// Мероприятия, в которых принимает участие.
     /// </summary>
     public virtual List<EventParticipant> EventParticipants { get; set; } = default!;
+
+    /// <summary>
+    /// Пользователь.
+    /// </summary>
+    public virtual RefreshToken? RefreshToken { get; set; }
 }

@@ -47,6 +47,11 @@ public interface IUniversityEventsDbContext
     DbSet<Image> Images { get; }
 
     /// <summary>
+    /// Refresh токены.
+    /// </summary>
+    DbSet<RefreshToken> RefreshTokens { get; }
+
+    /// <summary>
     /// База данных.
     /// </summary>
     DatabaseFacade Database { get; }

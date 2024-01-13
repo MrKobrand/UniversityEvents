@@ -17,4 +17,13 @@ public static class ServiceCollectionExtensions
     {
         services.TryAddScoped<IEnumService, EnumService>();
     }
+
+    /// <summary>
+    /// Добавляет зависимость <see cref="IHttpContextWrapper"/>.
+    /// </summary>
+    /// <param name="services">Контракт для коллекции сервисов.</param>
+    public static void TryAddHttpContextWrapper(this IServiceCollection services)
+    {
+        services.TryAddScoped<IHttpContextWrapper, HttpContextWrapper>();
+    }
 }
