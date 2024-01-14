@@ -1,3 +1,4 @@
+using System.IO;
 using Application.Common.Files.Dto;
 using Domain.Entities;
 
@@ -12,15 +13,33 @@ public static class MappingExtensions
     /// Преобразует сущность типа <see cref="Image"/> в <see cref="ImageDto"/>.
     /// </summary>
     /// <param name="value">Изображение.</param>
+    /// <param name="link">Ссылка на изображение.</param>
     /// <returns>Основная информация об изображении.</returns>
-    public static ImageDto ToDto(this Image value)
+    public static ImageDto ToDto(this Image value, string link)
     {
         return new ImageDto
         {
             Id = value.Id,
             FileName = value.FileName,
-            Link = value.Link,
+            ContentType = value.ContentType,
+            Link = link,
             StorageType = value.StorageType
+        };
+    }
+
+    /// <summary>
+    /// Преобразует сущность типа <see cref="Image"/> в <see cref="ImageTransferDto"/>.
+    /// </summary>
+    /// <param name="value">Изображение.</param>
+    /// <param name="stream">Содержимое изображения.</param>
+    /// <returns>Основная информация об изображении.</returns>
+    public static ImageTransferDto ToTransferDto(this Image value, Stream stream)
+    {
+        return new ImageTransferDto
+        {
+            Stream = stream,
+            FileName = value.FileName,
+            ContentType = value.ContentType
         };
     }
 }

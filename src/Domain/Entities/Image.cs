@@ -14,9 +14,9 @@ public class Image : BaseEntity
     public required string FileName { get; set; }
 
     /// <summary>
-    /// Ссылка на изображение.
+    /// Тип содержимого изображения.
     /// </summary>
-    public required string Link { get; set; }
+    public required string ContentType { get; set; }
 
     /// <summary>
     /// Тип хранения изображения.

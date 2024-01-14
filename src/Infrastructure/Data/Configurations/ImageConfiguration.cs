@@ -21,7 +21,7 @@ public class ImageConfiguration : IEntityTypeConfiguration<Image>
             .HasColumnType("varchar(128)")
             .IsRequired();
 
-        builder.Property(x => x.Link)
+        builder.Property(x => x.ContentType)
             .HasColumnType("varchar(256)")
             .IsRequired();
 

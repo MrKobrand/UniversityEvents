@@ -18,6 +18,11 @@ public class ImageDto
     public required string FileName { get; set; }
 
     /// <summary>
+    /// Тип содержимого изображения.
+    /// </summary>
+    public required string ContentType { get; set; }
+
+    /// <summary>
     /// Ссылка на изображение.
     /// </summary>
     public required string Link { get; set; }

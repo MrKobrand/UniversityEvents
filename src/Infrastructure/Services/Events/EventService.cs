@@ -52,15 +52,11 @@ public class EventService : IEventService
         _logger.LogTrace("<GetAsync>: {Id}", id);
 
         var @event = await _dbContext.Events
-            .Include(x => x.PreviewImage)
             .Include(x => x.Author)
-            .ThenInclude(x => x.AvatarImage)
             .Include(x => x.EventSpeakers)
             .ThenInclude(x => x.User)
-            .ThenInclude(x => x.AvatarImage)
             .Include(x => x.EventParticipants)
             .ThenInclude(x => x.User)
-            .ThenInclude(x => x.AvatarImage)
             .AsNoTracking()
             .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
 
@@ -77,15 +73,11 @@ public class EventService : IEventService
         _logger.LogTrace("<GetListAsync>: {Limit}, {Search}", limit, search);
 
         var eventsQuery = _dbContext.Events
-            .Include(x => x.PreviewImage)
             .Include(x => x.Author)
-            .ThenInclude(x => x.AvatarImage)
             .Include(x => x.EventSpeakers)
             .ThenInclude(x => x.User)
-            .ThenInclude(x => x.AvatarImage)
             .Include(x => x.EventParticipants)
             .ThenInclude(x => x.User)
-            .ThenInclude(x => x.AvatarImage)
             .AsNoTracking();
 
         if (!string.IsNullOrEmpty(search))
@@ -116,15 +108,11 @@ public class EventService : IEventService
         _logger.LogTrace("<GetPageAsync>: {Page}, {Limit}, {Search}", page, limit, search);
 
         var eventsQuery = _dbContext.Events
-            .Include(x => x.PreviewImage)
             .Include(x => x.Author)
-            .ThenInclude(x => x.AvatarImage)
             .Include(x => x.EventSpeakers)
             .ThenInclude(x => x.User)
-            .ThenInclude(x => x.AvatarImage)
             .Include(x => x.EventParticipants)
             .ThenInclude(x => x.User)
-            .ThenInclude(x => x.AvatarImage)
             .AsNoTracking();
 
         if (!string.IsNullOrEmpty(search))

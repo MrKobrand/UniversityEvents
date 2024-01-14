@@ -13,7 +13,6 @@ namespace Web.Controllers;
 /// <summary>
 /// Контроллер изображений.
 /// </summary>
-[Authorization(RoleType.Administrator)]
 public class ImagesController : ApiControllerBase
 {
     private readonly IFileStorage _fileStorage;
@@ -28,6 +27,26 @@ public class ImagesController : ApiControllerBase
     }
 
     /// <summary>
+    /// Открывает файл по его уникальному идентификатору.
+    /// </summary>
+    /// <param name="id">Уникальный идентификатор изображения.</param>
+    /// <param name="cancellationToken">Токен отмены операции.</param>
+    /// <returns>Изображение.</returns>
+    [HttpGet("{id:long}")]
+    [ProducesResponseType(404)]
+    [ProducesResponseType(typeof(FileStreamResult), 200)]
+    public async Task<IActionResult> OpenImage([FromRoute] long id, CancellationToken cancellationToken)
+    {
+        var file = await _fileStorage.OpenAsync(id, cancellationToken);
+
+        return file switch
+        {
+            ImageTransferDto result => File(result.Stream, result.ContentType, result.FileName),
+            null => NotFound(),
+        };
+    }
+
+    /// <summary>
     /// Создает файл изображения.
     /// </summary>
     /// <param name="formFile">Файл-изображение.</param>
@@ -35,6 +54,7 @@ public class ImagesController : ApiControllerBase
     /// <returns>Изображение с временным типом хранилища.</returns>
     /// <exception cref="ArgumentException">Выбрасывается, если не был передан файл.</exception>
     [HttpPost]
+    [Authorization(RoleType.Administrator)]
     public async Task<ImageDto> CreateImage(IFormFile formFile, CancellationToken cancellationToken)
     {
         if (formFile.Length == 0)
@@ -43,7 +63,7 @@ public class ImagesController : ApiControllerBase
         }
 
         using var stream = formFile.OpenReadStream();
-        return await _fileStorage.CreateAsync(stream, formFile.FileName, cancellationToken);
+        return await _fileStorage.CreateAsync(stream, formFile.FileName, formFile.ContentType, cancellationToken);
     }
 
     /// <summary>
@@ -53,6 +73,7 @@ public class ImagesController : ApiControllerBase
     /// <param name="cancellationToken">Токен отмены операции.</param>
     /// <returns>Удаленное изображение.</returns>
     [HttpDelete("{id:long}")]
+    [Authorization(RoleType.Administrator)]
     public Task<ImageDto?> DeleteImage([FromRoute] long id, CancellationToken cancellationToken)
     {
         return _fileStorage.DeleteFileAsync(id, cancellationToken);

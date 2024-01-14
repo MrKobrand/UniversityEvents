@@ -106,7 +106,6 @@ public class UserService : IUserService
         _logger.LogTrace("<GetAsync>: {Id}", id);
 
         var user = await _dbContext.Users
-            .Include(x => x.AvatarImage)
             .AsNoTracking()
             .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
 
@@ -119,7 +118,6 @@ public class UserService : IUserService
         _logger.LogTrace("<GetListAsync>: {Limit}, {Search}", limit, search);
 
         var usersQuery = _dbContext.Users
-            .Include(x => x.AvatarImage)
             .AsNoTracking();
 
         if (!string.IsNullOrEmpty(search))

@@ -36,7 +36,7 @@ public partial class Init : Migration
                 Id = table.Column<long>(type: "bigint", nullable: false)
                     .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                 FileName = table.Column<string>(type: "varchar(128)", nullable: false),
-                Link = table.Column<string>(type: "varchar(256)", nullable: false),
+                ContentType = table.Column<string>(type: "varchar(256)", nullable: false),
                 StorageType = table.Column<short>(type: "smallint", nullable: false),
                 CreateDate = table.Column<DateTimeOffset>(type: "timestamptz", nullable: false),
                 UpdateDate = table.Column<DateTimeOffset>(type: "timestamptz", nullable: false)

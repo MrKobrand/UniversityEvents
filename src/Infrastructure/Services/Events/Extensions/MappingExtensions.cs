@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Application.Common.Models;
 using Application.Contracts.Events.Dto;
 using Domain.Entities;
+using Infrastructure.Services.Files;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Services.Events.Extensions;
@@ -34,12 +35,12 @@ public static class MappingExtensions
             PreviewImageId = value.PreviewImageId,
             CategoryId = value.CategoryId,
             AuthorId = value.AuthorId,
-            PreviewImageLink = value.PreviewImage?.Link,
+            PreviewImageLink = FileLinkHelper.GetLinkToFile(value.PreviewImageId),
             AuthorFirstName = value.Author.FirstName,
             AuthorLastName = value.Author.LastName,
             AuthorMiddleName = value.Author.MiddleName,
             AuthorAvatarId = value.Author.AvatarId,
-            AuthorAvatarLink = value.Author.AvatarImage?.Link,
+            AuthorAvatarLink = FileLinkHelper.GetLinkToFile(value.Author.AvatarId),
             Speakers = value.EventSpeakers.ToDto(),
             Participants = value.EventParticipants.ToDto()
         };
@@ -114,7 +115,7 @@ public static class MappingExtensions
             LastName = value.LastName,
             MiddleName = value.MiddleName,
             AvatarId = value.AvatarId,
-            AvatarLink = value.AvatarImage?.Link
+            AvatarLink = FileLinkHelper.GetLinkToFile(value.AvatarId)
         };
     }
 

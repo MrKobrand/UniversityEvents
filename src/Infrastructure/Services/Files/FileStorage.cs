@@ -52,21 +52,43 @@ public class FileStorage : IFileStorage
     }
 
     /// <inheritdoc/>
-    public async Task<ImageDto> CreateAsync(Stream content, string fileName, CancellationToken cancellationToken)
+    public async Task<ImageTransferDto?> OpenAsync(long id, CancellationToken cancellationToken)
     {
-        var link = GetPath(ImageStorageType.Temp, fileName);
+        _logger.LogTrace("<OpenAsync>: {Id}", id);
 
-        if (File.Exists(link))
+        var image = await _dbContext.Images.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+
+        if (image is null)
+        {
+            return null;
+        }
+
+        var link = GetPath(image.StorageType, image.FileName);
+        var stream = File.OpenRead(link);
+
+        return image.ToTransferDto(stream);
+    }
+
+    /// <inheritdoc/>
+    public async Task<ImageDto> CreateAsync(
+        Stream content,
+        string fileName,
+        string contentType,
+        CancellationToken cancellationToken)
+    {
+        var path = GetPath(ImageStorageType.Temp, fileName);
+
+        if (File.Exists(path))
         {
             var fileExtenstion = Path.GetExtension(fileName);
             var fileExtensionIndex = fileName.IndexOf(fileExtenstion);
             var dateTimeNow = _timeProvider.GetUtcNow().DateTime;
 
             fileName = fileName.Insert(fileExtensionIndex, dateTimeNow.ToString("yyyy_MM_dd_hh_mm_ss"));
-            link = GetPath(ImageStorageType.Temp, fileName);
+            path = GetPath(ImageStorageType.Temp, fileName);
         }
 
-        using (var fileStream = new FileStream(link, FileMode.Create))
+        using (var fileStream = new FileStream(path, FileMode.Create))
         {
             content.Seek(0, SeekOrigin.Begin);
             await content.CopyToAsync(fileStream);
@@ -75,14 +97,16 @@ public class FileStorage : IFileStorage
         var image = new Image
         {
             FileName = fileName,
-            Link = link,
+            ContentType = contentType,
             StorageType = ImageStorageType.Temp
         };
 
         var createdImage = await _dbContext.Images.AddAsync(image, cancellationToken);
         await _dbContext.SaveChangesAsync(cancellationToken);
 
-        return createdImage.Entity.ToDto();
+        var link = FileLinkHelper.GetLinkToFile(createdImage.Entity.Id)!;
+
+        return createdImage.Entity.ToDto(link);
     }
 
     /// <inheritdoc/>
@@ -114,13 +138,14 @@ public class FileStorage : IFileStorage
 
         File.Move(tempFilePath, persistentFilePath);
 
-        image.Link = persistentFilePath;
         image.StorageType = ImageStorageType.Persistent;
         await _dbContext.SaveChangesAsync(cancellationToken);
 
         _logger.LogInformation("Image with {Id} moved to persistent storage", id);
 
-        return image.ToDto();
+        var link = FileLinkHelper.GetLinkToFile(image.Id)!;
+
+        return image.ToDto(link);
     }
 
     /// <inheritdoc/>
@@ -130,17 +155,22 @@ public class FileStorage : IFileStorage
 
         var image = await _dbContext.Images.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
 
-        if (image is not null)
+        if (image is null)
         {
-            _dbContext.Images.Remove(image);
-            await _dbContext.SaveChangesAsync(cancellationToken);
-
-            File.Delete(image.Link);
-
-            _logger.LogInformation("Image with {Id} found and deleted", id);
+            return null;
         }
 
-        return image?.ToDto();
+        _dbContext.Images.Remove(image);
+        await _dbContext.SaveChangesAsync(cancellationToken);
+
+        var path = GetPath(image.StorageType, image.FileName);
+        File.Delete(path);
+
+        _logger.LogInformation("Image with {Id} found and deleted", id);
+
+        var link = FileLinkHelper.GetLinkToFile(image.Id)!;
+
+        return image.ToDto(link);
     }
 
     /// <summary>

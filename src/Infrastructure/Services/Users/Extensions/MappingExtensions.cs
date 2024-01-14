@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Application.Contracts.Users.Dto;
 using Domain.Entities;
+using Infrastructure.Services.Files;
 
 namespace Infrastructure.Services.Users.Extensions;
 
@@ -27,7 +28,7 @@ public static class MappingExtensions
             Role = value.Role,
             Email = value.Email,
             AvatarId = value.AvatarId,
-            AvatarLink = value.AvatarImage?.Link
+            AvatarLink = FileLinkHelper.GetLinkToFile(value.AvatarId)
         };
     }
 
