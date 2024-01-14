@@ -119,13 +119,13 @@ public static class MappingExtensions
     }
 
     /// <summary>
-    /// 
+    /// Преобразует перечисление типа <see cref="User"/> в список с пагинацией.
     /// </summary>
-    /// <param name="values"></param>
-    /// <param name="pageNumber"></param>
-    /// <param name="pageSize"></param>
-    /// <param name="cancellationToken"></param>
-    /// <returns></returns>
+    /// <param name="values">Список сущностей.</param>
+    /// <param name="pageNumber">Номер страницы.</param>
+    /// <param name="pageSize">Размер страницы.</param>
+    /// <param name="cancellationToken">Токен отмены операции.</param>
+    /// <returns>Список с пагинацией.</returns>
     public static async Task<PaginatedList<DetailedEventDto>> ToPaginatedListAsync(
         this IQueryable<Event> values, int pageNumber, int pageSize, CancellationToken cancellationToken)
     {

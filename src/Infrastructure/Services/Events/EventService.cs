@@ -49,7 +49,7 @@ public class EventService : IEventService
     /// <inheritdoc/>
     public async Task<DetailedEventDto?> GetAsync(long id, CancellationToken cancellationToken)
     {
-        _logger.LogTrace("<GetAsync>: {Id}.", id);
+        _logger.LogTrace("<GetAsync>: {Id}", id);
 
         var @event = await _dbContext.Events
             .Include(x => x.PreviewImage)
@@ -89,7 +89,9 @@ public class EventService : IEventService
             eventsQuery = eventsQuery.Where(x => x.Subject.Contains(search));
         }
 
-        var events = await eventsQuery.ToListAsync(cancellationToken);
+        var events = await eventsQuery
+            .Take(limit ?? 25)
+            .ToListAsync(cancellationToken);
 
         return events.ToDetailedDto();
     }
