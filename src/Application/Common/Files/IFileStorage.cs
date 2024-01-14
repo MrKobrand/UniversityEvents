@@ -25,7 +25,7 @@ public interface IFileStorage
     /// <param name="id">Уникальный идентификатор изображения.</param>
     /// <param name="cancellationToken">Токен отмены операции.</param>
     /// <returns>Изображение с измененными путем и типом хранилища.</returns>
-    Task<ImageDto> MoveAndSaveTempFileAsync(long? id, CancellationToken cancellationToken);
+    Task<ImageDto?> MoveAndSaveTempFileAsync(long? id, CancellationToken cancellationToken);
 
     /// <summary>
     /// Удаляет изображение из файлового хранилища.

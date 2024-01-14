@@ -9,6 +9,10 @@ Domain.xml
 Infrastructure.xml
 Web.xml
 
+# Images
+src/Web/temp-images
+src/Web/images
+
 # User-specific files
 *.rsuser
 *.suo

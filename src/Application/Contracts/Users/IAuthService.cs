@@ -1,6 +1,7 @@
 using System;
-using Application.Common.Accounting.Dto;
 using Application.Contracts.Users.Dto;
+
+using AuthUserDto = Application.Common.Accounting.Dto.UserDto;
 
 namespace Application.Contracts.Users;
 
@@ -15,7 +16,7 @@ public interface IAuthService
     /// <param name="userDto">Информация о пользователе.</param>
     /// <param name="tokenLifeTime">Время жизни токена.</param>
     /// <returns>Пара JWT + RT токенов.</returns>
-    TokensPairDto SignIn(UserDto userDto, TimeSpan tokenLifeTime);
+    TokensPairDto SignIn(AuthUserDto userDto, TimeSpan tokenLifeTime);
 
     /// <summary>
     /// Убирает доступ пользователя к системе.

@@ -1,12 +1,13 @@
 using System;
 using Application.Common.Accounting;
-using Application.Common.Accounting.Dto;
 using Application.Common.Interfaces;
 using Application.Contracts.Users;
 using Application.Contracts.Users.Dto;
 using Infrastructure.Configuration;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
+
+using AuthUserDto = Application.Common.Accounting.Dto.UserDto;
 
 namespace Infrastructure.Services.Users;
 
@@ -38,7 +39,7 @@ public class AuthService : IAuthService
     }
 
     /// <inheritdoc/>
-    public TokensPairDto SignIn(UserDto userDto, TimeSpan tokenLifeTime)
+    public TokensPairDto SignIn(AuthUserDto userDto, TimeSpan tokenLifeTime)
     {
         var userToken = _jwtHandler.GenerateJwt(userDto, tokenLifeTime);
         var refreshToken = _jwtHandler.GenerateRefreshToken();

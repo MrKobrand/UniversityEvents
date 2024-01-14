@@ -86,9 +86,14 @@ public class FileStorage : IFileStorage
     }
 
     /// <inheritdoc/>
-    public async Task<ImageDto> MoveAndSaveTempFileAsync(long? id, CancellationToken cancellationToken)
+    public async Task<ImageDto?> MoveAndSaveTempFileAsync(long? id, CancellationToken cancellationToken)
     {
         _logger.LogTrace("<MoveAndSaveTempFileAsync>: {Id}", id);
+
+        if (!id.HasValue)
+        {
+            return null;
+        }
 
         var image = await _dbContext.Images.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
 

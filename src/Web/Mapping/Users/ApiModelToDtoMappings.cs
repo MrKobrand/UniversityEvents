@@ -22,4 +22,23 @@ public static class ApiModelToDtoMappings
             RememberMe = command.RememberMe,
         };
     }
+
+    /// <summary>
+    /// Преобразует запрос на создание пользователя в DTO.
+    /// </summary>
+    /// <param name="command">Запрос на создание пользователя.</param>
+    /// <returns>DTO запроса на создание пользователя.</returns>
+    public static CreateUserRequestDto ToRequestDto(this CreateUserCommand command)
+    {
+        return new CreateUserRequestDto
+        {
+            FirstName = command.FirstName,
+            LastName = command.LastName,
+            MiddleName = command.MiddleName,
+            Role = command.Role,
+            Email = command.Email,
+            Password = command.Password,
+            AvatarId = command.AvatarId
+        };
+    }
 }

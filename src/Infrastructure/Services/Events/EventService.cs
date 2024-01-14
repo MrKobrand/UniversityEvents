@@ -153,7 +153,6 @@ public class EventService : IEventService
         };
 
         var createdEvent = await _dbContext.Events.AddAsync(@event, cancellationToken);
-
         await _dbContext.SaveChangesAsync(cancellationToken);
 
         await transaction.CommitAsync(cancellationToken);
@@ -214,8 +213,14 @@ public class EventService : IEventService
 
         if (@event is not null)
         {
+            using var transaction = await _dbContext.Database.BeginTransactionAsync(cancellationToken);
+
+            await _fileStorage.DeleteFileAsync(@event.PreviewImageId, cancellationToken);
             _dbContext.Events.Remove(@event);
             await _dbContext.SaveChangesAsync(cancellationToken);
+
+            await transaction.CommitAsync(cancellationToken);
+
             _logger.LogInformation("Event with {Id} found and deleted", id);
         }
 
