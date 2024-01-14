@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Application.Common.Files;
 using Application.Common.Files.Dto;
 using Application.Common.Interfaces;
+using Domain.Entities;
 using Domain.Enums;
 using Infrastructure.Services.Files.Extensions;
 using Microsoft.EntityFrameworkCore;
@@ -22,16 +23,22 @@ public class FileStorage : IFileStorage
 
     private readonly ILogger<FileStorage> _logger;
     private readonly IUniversityEventsDbContext _dbContext;
+    private readonly TimeProvider _timeProvider;
 
     /// <summary>
     /// Конструктор, подтягивающий зависимости через DI.
     /// </summary>
     /// <param name="logger">Логгер событий.</param>
     /// <param name="dbContext">Контекст базы данных.</param>
-    public FileStorage(ILogger<FileStorage> logger, IUniversityEventsDbContext dbContext)
+    /// <param name="timeProvider">Сервис для работы со временем.</param>
+    public FileStorage(
+        ILogger<FileStorage> logger,
+        IUniversityEventsDbContext dbContext,
+        TimeProvider timeProvider)
     {
         _logger = logger;
         _dbContext = dbContext;
+        _timeProvider = timeProvider;
 
         if (!Directory.Exists(TEMP_IMAGE_FOLDER))
         {
@@ -42,6 +49,40 @@ public class FileStorage : IFileStorage
         {
             Directory.CreateDirectory(IMAGE_FOLDER);
         }
+    }
+
+    /// <inheritdoc/>
+    public async Task<ImageDto> CreateAsync(Stream content, string fileName, CancellationToken cancellationToken)
+    {
+        var link = GetPath(ImageStorageType.Temp, fileName);
+
+        if (File.Exists(link))
+        {
+            var fileExtenstion = Path.GetExtension(fileName);
+            var fileExtensionIndex = fileName.IndexOf(fileExtenstion);
+            var dateTimeNow = _timeProvider.GetUtcNow().DateTime;
+
+            fileName = fileName.Insert(fileExtensionIndex, dateTimeNow.ToString("yyyy_MM_dd_hh_mm_ss"));
+            link = GetPath(ImageStorageType.Temp, fileName);
+        }
+
+        using (var fileStream = new FileStream(link, FileMode.Create))
+        {
+            content.Seek(0, SeekOrigin.Begin);
+            await content.CopyToAsync(fileStream);
+        }
+
+        var image = new Image
+        {
+            FileName = fileName,
+            Link = link,
+            StorageType = ImageStorageType.Temp
+        };
+
+        var createdImage = await _dbContext.Images.AddAsync(image, cancellationToken);
+        await _dbContext.SaveChangesAsync(cancellationToken);
+
+        return createdImage.Entity.ToDto();
     }
 
     /// <inheritdoc/>
@@ -63,13 +104,14 @@ public class FileStorage : IFileStorage
             throw new ArgumentException("Image with specified id does not have temp storage type", nameof(image.StorageType));
         }
 
-        image.StorageType = ImageStorageType.Persistent;
-        await _dbContext.SaveChangesAsync(cancellationToken);
-
         var tempFilePath = GetPath(ImageStorageType.Temp, image.FileName);
         var persistentFilePath = GetPath(ImageStorageType.Persistent, image.FileName);
 
         File.Move(tempFilePath, persistentFilePath);
+
+        image.Link = persistentFilePath;
+        image.StorageType = ImageStorageType.Persistent;
+        await _dbContext.SaveChangesAsync(cancellationToken);
 
         _logger.LogInformation("Image with {Id} moved to persistent storage", id);
 
@@ -88,8 +130,7 @@ public class FileStorage : IFileStorage
             _dbContext.Images.Remove(image);
             await _dbContext.SaveChangesAsync(cancellationToken);
 
-            var filePath = GetPath(image.StorageType, image.FileName);
-            File.Delete(filePath);
+            File.Delete(image.Link);
 
             _logger.LogInformation("Image with {Id} found and deleted", id);
         }
