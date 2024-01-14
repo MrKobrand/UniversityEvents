@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Application.Common.Files;
 using Application.Common.Files.Dto;
+using Domain.Enums;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Web.Infrastructure;
@@ -12,6 +13,7 @@ namespace Web.Controllers;
 /// <summary>
 /// Контроллер изображений.
 /// </summary>
+[Authorization(RoleType.Administrator)]
 public class ImagesController : ApiControllerBase
 {
     private readonly IFileStorage _fileStorage;
@@ -33,7 +35,6 @@ public class ImagesController : ApiControllerBase
     /// <returns>Изображение с временным типом хранилища.</returns>
     /// <exception cref="ArgumentException">Выбрасывается, если не был передан файл.</exception>
     [HttpPost]
-    [Authorization]
     public async Task<ImageDto> CreateImage(IFormFile formFile, CancellationToken cancellationToken)
     {
         if (formFile.Length == 0)
@@ -52,7 +53,6 @@ public class ImagesController : ApiControllerBase
     /// <param name="cancellationToken">Токен отмены операции.</param>
     /// <returns>Удаленное изображение.</returns>
     [HttpDelete("{id:long}")]
-    [Authorization]
     public Task<ImageDto?> DeleteImage([FromRoute] long id, CancellationToken cancellationToken)
     {
         return _fileStorage.DeleteFileAsync(id, cancellationToken);

@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Application.Contracts.EventSections;
 using Application.Contracts.EventSections.Dto;
+using Domain.Enums;
 using Microsoft.AspNetCore.Mvc;
 using Web.Contracts.EventSections;
 using Web.Infrastructure;
@@ -60,7 +61,7 @@ public class EventSectionsController : ApiControllerBase
     /// <param name="cancellationToken">Токен отмены операции.</param>
     /// <returns>Информация о разделе мероприятия.</returns>
     [HttpPost]
-    [Authorization]
+    [Authorization(RoleType.Administrator)]
     public Task<EventSectionDto> Create(
         [FromBody] CreateEventSectionCommand command,
         CancellationToken cancellationToken)
@@ -75,7 +76,7 @@ public class EventSectionsController : ApiControllerBase
     /// <param name="cancellationToken">Токен отмены операции.</param>
     /// <returns>Информация о разделе мероприятия.</returns>
     [HttpDelete("{id:long}")]
-    [Authorization]
+    [Authorization(RoleType.Administrator)]
     public Task<EventSectionDto?> Delete([FromRoute] long id, CancellationToken cancellationToken)
     {
         return _eventSectionService.DeleteAsync(id, cancellationToken);

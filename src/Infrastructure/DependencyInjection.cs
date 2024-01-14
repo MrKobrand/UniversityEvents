@@ -1,5 +1,6 @@
 using Infrastructure.Accounting.Extensions;
 using Infrastructure.Data.Extensions;
+using Infrastructure.Services.EventCategories.Extensions;
 using Infrastructure.Services.Events.Extensions;
 using Infrastructure.Services.EventSections.Extensions;
 using Infrastructure.Services.Users.Extensions;
@@ -27,6 +28,7 @@ public static class DependencyInjection
 
         services.TryAddAuthorization();
         services.TryAddEventSectionService();
+        services.TryAddEventCategoryService();
         services.TryAddEventService();
         services.TryAddUserService();
 
