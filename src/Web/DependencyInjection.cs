@@ -113,12 +113,12 @@ public static class DependencyInjection
                 opt.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuer = true,
-                    ValidIssuer = configuration["JWT:Issuer"],
+                    ValidIssuer = configuration["JwtOptions:Issuer"],
                     ValidateAudience = true,
-                    ValidAudience = configuration["JWT:Audience"],
+                    ValidAudience = configuration["JwtOptions:Audience"],
                     ValidateLifetime = true,
                     IssuerSigningKey = new SymmetricSecurityKey(
-                        Encoding.ASCII.GetBytes(configuration["JWT:Key"]!)),
+                        Encoding.ASCII.GetBytes(configuration["JwtOptions:Key"]!)),
                     ValidateIssuerSigningKey = true
                 };
             });

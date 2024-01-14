@@ -1,4 +1,6 @@
 using Application.Contracts.Users;
+using Infrastructure.Configuration;
+using Infrastructure.Extensions;
 using Infrastructure.Services.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -16,6 +18,7 @@ public static class ServiceCollectionExtensions
     /// <param name="services">Контракт для коллекции сервисов.</param>
     public static void TryAddUserService(this IServiceCollection services)
     {
+        services.BindOptionsFromConfiguration<JwtOptions>();
         services.TryAddScoped<IPasswordHashService, PasswordHashService>();
         services.TryAddHttpContextWrapper();
         services.TryAddScoped<IAuthService, AuthService>();

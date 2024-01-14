@@ -18,8 +18,8 @@ public class RefreshTokenConfiguration : IEntityTypeConfiguration<RefreshToken>
         builder.ConfigureBaseEntity();
 
         builder.HasOne(x => x.User)
-            .WithOne(x => x.RefreshToken)
-            .HasForeignKey<RefreshToken>(x => x.UserId);
+            .WithMany(x => x.RefreshTokens)
+            .HasForeignKey(x => x.UserId);
 
         builder.Property(x => x.Token)
             .HasColumnType("varchar(256)")

@@ -72,5 +72,5 @@ public class User : BaseEntity
     /// <summary>
     /// Пользователь.
     /// </summary>
-    public virtual RefreshToken? RefreshToken { get; set; }
+    public virtual List<RefreshToken> RefreshTokens { get; set; } = default!;
 }
