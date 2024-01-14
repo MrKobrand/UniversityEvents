@@ -40,10 +40,10 @@ public class DetailedEventDto : EventDto
     /// <summary>
     /// Спикеры.
     /// </summary>
-    public required List<UserDto> Speakers { get; set; }
+    public required List<EventUserDto> Speakers { get; set; }
 
     /// <summary>
     /// Участники.
     /// </summary>
-    public required List<UserDto> Participants { get; set; }
+    public required List<EventUserDto> Participants { get; set; }
 }

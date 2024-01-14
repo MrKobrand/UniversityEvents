@@ -3,7 +3,7 @@ namespace Application.Contracts.Events.Dto;
 /// <summary>
 /// Участник мероприятия.
 /// </summary>
-public class UserDto
+public class EventUserDto
 {
     /// <summary>
     /// Уникальный идентификатор.

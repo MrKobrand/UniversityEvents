@@ -81,33 +81,33 @@ public static class MappingExtensions
     }
 
     /// <summary>
-    /// Преобразует список сущностей типа <see cref="EventSpeaker"/> в <see cref="UserDto"/>.
+    /// Преобразует список сущностей типа <see cref="EventSpeaker"/> в <see cref="EventUserDto"/>.
     /// </summary>
     /// <param name="values">Список спикеров мероприятия.</param>
     /// <returns>Список пользователей-спикеров мероприятия.</returns>
-    public static List<UserDto> ToDto(this List<EventSpeaker> values)
+    public static List<EventUserDto> ToDto(this List<EventSpeaker> values)
     {
         return values.Select(x => x.User.ToDto()).ToList();
     }
 
     /// <summary>
-    /// Преобразует список сущностей типа <see cref="EventParticipant"/> в <see cref="UserDto"/>.
+    /// Преобразует список сущностей типа <see cref="EventParticipant"/> в <see cref="EventUserDto"/>.
     /// </summary>
     /// <param name="values">Список участников мероприятия.</param>
     /// <returns>Список пользователей-участников мероприятия.</returns>
-    public static List<UserDto> ToDto(this List<EventParticipant> values)
+    public static List<EventUserDto> ToDto(this List<EventParticipant> values)
     {
         return values.Select(x => x.User.ToDto()).ToList();
     }
 
     /// <summary>
-    /// Преобразует сущность типа <see cref="User"/> в <see cref="UserDto"/>.
+    /// Преобразует сущность типа <see cref="User"/> в <see cref="EventUserDto"/>.
     /// </summary>
     /// <param name="value">Пользователь.</param>
     /// <returns>Краткая информация о пользователе для мероприятия.</returns>
-    public static UserDto ToDto(this User value)
+    public static EventUserDto ToDto(this User value)
     {
-        return new UserDto
+        return new EventUserDto
         {
             Id = value.Id,
             FirstName = value.FirstName,
@@ -137,5 +137,35 @@ public static class MappingExtensions
             .ToListAsync(cancellationToken);
 
         return new PaginatedList<DetailedEventDto>(events.ToDetailedDto(), count, pageNumber, pageSize);
+    }
+
+    /// <summary>
+    /// Преобразует сущность типа <see cref="EventParticipant"/> в <see cref="EventParticipantDto"/>.
+    /// </summary>
+    /// <param name="value">Пользователь.</param>
+    /// <returns>Краткая информация о пользователе для мероприятия.</returns>
+    public static EventParticipantDto ToDto(this EventParticipant value)
+    {
+        return new EventParticipantDto
+        {
+            Id = value.Id,
+            EventId = value.EventId,
+            UserId = value.UserId
+        };
+    }
+
+    /// <summary>
+    /// Преобразует сущность типа <see cref="EventSpeaker"/> в <see cref="EventSpeakerDto"/>.
+    /// </summary>
+    /// <param name="value">Пользователь.</param>
+    /// <returns>Краткая информация о пользователе для мероприятия.</returns>
+    public static EventSpeakerDto ToDto(this EventSpeaker value)
+    {
+        return new EventSpeakerDto
+        {
+            Id = value.Id,
+            EventId = value.EventId,
+            UserId = value.UserId
+        };
     }
 }

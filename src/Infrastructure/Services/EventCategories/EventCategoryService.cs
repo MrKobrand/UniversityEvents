@@ -64,7 +64,7 @@ public class EventCategoryService : IEventCategoryService
             eventCategoriesQuery = eventCategoriesQuery.Where(x => x.Name.Contains(search));
         }
 
-        if (sectionId is not null)
+        if (sectionId.HasValue)
         {
             eventCategoriesQuery = eventCategoriesQuery.Where(x => x.SectionId == sectionId);
         }

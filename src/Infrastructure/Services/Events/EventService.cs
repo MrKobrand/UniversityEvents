@@ -68,7 +68,11 @@ public class EventService : IEventService
     }
 
     /// <inheritdoc/>
-    public async Task<List<DetailedEventDto>> GetListAsync(int? limit, string? search, CancellationToken cancellationToken)
+    public async Task<List<DetailedEventDto>> GetListAsync(
+        int? limit,
+        string? search,
+        long? categoryId,
+        CancellationToken cancellationToken)
     {
         _logger.LogTrace("<GetListAsync>: {Limit}, {Search}", limit, search);
 
@@ -89,6 +93,11 @@ public class EventService : IEventService
             eventsQuery = eventsQuery.Where(x => x.Subject.Contains(search));
         }
 
+        if (categoryId.HasValue)
+        {
+            eventsQuery = eventsQuery.Where(x => x.CategoryId == categoryId);
+        }
+
         var events = await eventsQuery
             .Take(limit ?? 25)
             .ToListAsync(cancellationToken);
@@ -97,7 +106,12 @@ public class EventService : IEventService
     }
 
     /// <inheritdoc/>
-    public Task<PaginatedList<DetailedEventDto>> GetPageAsync(int? page, int? limit, string? search, CancellationToken cancellationToken)
+    public Task<PaginatedList<DetailedEventDto>> GetPageAsync(
+        int? page,
+        int? limit,
+        string? search,
+        long? categoryId,
+        CancellationToken cancellationToken)
     {
         _logger.LogTrace("<GetPageAsync>: {Page}, {Limit}, {Search}", page, limit, search);
 
@@ -116,6 +130,11 @@ public class EventService : IEventService
         if (!string.IsNullOrEmpty(search))
         {
             eventsQuery = eventsQuery.Where(x => x.Subject.Contains(search));
+        }
+
+        if (categoryId.HasValue)
+        {
+            eventsQuery = eventsQuery.Where(x => x.CategoryId == categoryId);
         }
 
         return eventsQuery.ToPaginatedListAsync(page ?? 1, limit ?? 25, cancellationToken);
@@ -196,7 +215,6 @@ public class EventService : IEventService
         @event.AuthorId = request.AuthorId;
 
         await _dbContext.SaveChangesAsync(cancellationToken);
-
         await transaction.CommitAsync(cancellationToken);
 
         _logger.LogInformation("Event with {Id} found and updated", request.Id);
@@ -225,5 +243,95 @@ public class EventService : IEventService
         }
 
         return @event?.ToDto();
+    }
+
+    /// <inheritdoc/>
+    public async Task<EventParticipantDto> AssignParticipantAsync(long id, long participantId, CancellationToken cancellationToken)
+    {
+        _logger.LogTrace("<AddParticipantAsync>: {Id}, {ParticipantId}", id, participantId);
+
+        var eventParticipant = new EventParticipant
+        {
+            EventId = id,
+            UserId = participantId
+        };
+
+        var createdEventParticipant = await _dbContext.EventParticipants
+            .AddAsync(eventParticipant, cancellationToken);
+
+        await _dbContext.SaveChangesAsync(cancellationToken);
+
+        _logger.LogInformation(
+            "User with id {ParticipantId} was assigned to the event with id {Id} as a participant",
+            participantId,
+            id);
+
+        return createdEventParticipant.Entity.ToDto();
+    }
+
+    /// <inheritdoc/>
+    public async Task<EventParticipantDto?> RemoveParticipantAsync(long id, long participantId, CancellationToken cancellationToken)
+    {
+        _logger.LogTrace("<RemoveParticipantAsync>: {Id}, {ParticipantId}", id, participantId);
+
+        var eventParticipant = await _dbContext.EventParticipants
+            .FirstOrDefaultAsync(x => x.EventId == id && x.UserId == participantId, cancellationToken);
+
+        if (eventParticipant is not null)
+        {
+            _dbContext.EventParticipants.Remove(eventParticipant);
+            await _dbContext.SaveChangesAsync(cancellationToken);
+
+            _logger.LogInformation("User with id {ParticipantId} was removed from the event with id {Id} as a participant",
+                participantId,
+                id);
+        }
+
+        return eventParticipant?.ToDto();
+    }
+
+    /// <inheritdoc/>
+    public async Task<EventSpeakerDto> AssignSpeakerAsync(long id, long speakerId, CancellationToken cancellationToken)
+    {
+        _logger.LogTrace("<AddSpeakerAsync>: {Id}, {SpeakerId}", id, speakerId);
+
+        var eventSpeaker = new EventSpeaker
+        {
+            EventId = id,
+            UserId = speakerId
+        };
+
+        var createdEventSpeaker = await _dbContext.EventSpeakers
+            .AddAsync(eventSpeaker, cancellationToken);
+
+        await _dbContext.SaveChangesAsync(cancellationToken);
+
+        _logger.LogInformation(
+            "User with id {SpeakerId} was assigned to the event with id {Id} as a speaker",
+            speakerId,
+            id);
+
+        return createdEventSpeaker.Entity.ToDto();
+    }
+
+    /// <inheritdoc/>
+    public async Task<EventSpeakerDto?> RemoveSpeakerAsync(long id, long speakerId, CancellationToken cancellationToken)
+    {
+        _logger.LogTrace("<RemoveSpeakerAsync>: {Id}, {SpeakerId}", id, speakerId);
+
+        var eventSpeaker = await _dbContext.EventSpeakers
+            .FirstOrDefaultAsync(x => x.EventId == id && x.UserId == speakerId, cancellationToken);
+
+        if (eventSpeaker is not null)
+        {
+            _dbContext.EventSpeakers.Remove(eventSpeaker);
+            await _dbContext.SaveChangesAsync(cancellationToken);
+
+            _logger.LogInformation("User with id {SpeakerId} was removed from the event with id {Id} as a speaker",
+                speakerId,
+                id);
+        }
+
+        return eventSpeaker?.ToDto();
     }
 }
