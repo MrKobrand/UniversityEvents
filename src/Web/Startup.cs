@@ -53,6 +53,7 @@ public class Startup
         if (env.IsDevelopment())
         {
             app.UseDeveloperExceptionPage();
+            app.UseWebAssemblyDebugging();
         }
         else
         {
@@ -77,10 +78,12 @@ public class Startup
         app.UseHttpsRedirection();
         app.UseStaticFiles();
         app.UseAuthorization();
+        app.UseBlazorFrameworkFiles();
 
         app.UseEndpoints(endpoints =>
         {
             endpoints.MapControllers();
+            endpoints.MapRazorPages();
             endpoints.MapFallbackToFile("index.html");
         });
     }

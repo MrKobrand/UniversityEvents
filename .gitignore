@@ -8,6 +8,7 @@ Application.xml
 Domain.xml
 Infrastructure.xml
 Web.xml
+WebBlazor.xml
 
 # Images
 src/Web/temp-images

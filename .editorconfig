@@ -173,6 +173,10 @@ indent_size=2
 indent_style=space
 indent_size=2
 
+[*.{html,css,razor}]
+indent_style=space
+indent_size=2
+
 [*.{appxmanifest,asax,ascx,aspx,build,cg,cginc,compute,cs,cshtml,dtd,fs,fsi,fsscript,fsx,hlsl,hlsli,hlslinc,master,ml,mli,nuspec,razor,resw,resx,skin,usf,ush,vb,xaml,xamlx,xoml,xsd}]
 indent_style=space
 indent_size=4
