@@ -1,9 +1,9 @@
 using Domain.Enums;
 
-namespace WebBlazor.Contracts.Shared.Dto;
+namespace Application.Common.Accounting.Dto;
 
 /// <summary>
-/// Информация об авторизованном пользователе.
+/// Информация о пользователе.
 /// </summary>
 public class AuthUserDto
 {
@@ -31,4 +31,19 @@ public class AuthUserDto
     /// Электронная почта.
     /// </summary>
     public required string Email { get; set; }
+
+    /// <summary>
+    /// Токен доступа.
+    /// </summary>
+    public string? AccessToken { get; set; }
+
+    /// <summary>
+    /// Токен обновления JWT + Refresh Token.
+    /// </summary>
+    public string? RefreshToken { get; set; }
+
+    /// <summary>
+    /// Чек-бокс "Запомнить меня".
+    /// </summary>
+    public bool RememberMe { get; set; }
 }

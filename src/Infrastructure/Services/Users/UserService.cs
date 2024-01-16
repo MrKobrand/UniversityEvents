@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Application.Common.Accounting;
+using Application.Common.Accounting.Dto;
 using Application.Common.Files;
 using Application.Common.Interfaces;
 using Application.Contracts.Users;
@@ -10,13 +12,12 @@ using Application.Contracts.Users.Dto;
 using Application.Contracts.Users.Models;
 using Domain.Entities;
 using Infrastructure.Configuration;
+using Infrastructure.Exceptions;
 using Infrastructure.Services.EventCategories.Extensions;
 using Infrastructure.Services.Users.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-
-using AuthUserDto = Application.Common.Accounting.Dto.UserDto;
 
 namespace Infrastructure.Services.Users;
 
@@ -30,6 +31,7 @@ public class UserService : IUserService
     private readonly IPasswordHashService _passwordHashService;
     private readonly IAuthService _authService;
     private readonly IFileStorage _fileStorage;
+    private readonly IUserContext _userContext;
     private readonly TimeProvider _timeProvider;
     private readonly JwtOptions _options;
 
@@ -41,6 +43,7 @@ public class UserService : IUserService
     /// <param name="passwordHashService">Сервис для работы с хэшированными паролями.</param>
     /// <param name="authService">Сервис для аутентификации пользователей.</param>
     /// <param name="fileStorage">Сервис для работы с файловым хранилищем.</param>
+    /// <param name="userContext">Авторизационные данные пользователя.</param>
     /// <param name="options">Опции для JWT.</param>
     /// <param name="timeProvider">Сервис для работы со временем.</param>
     public UserService(
@@ -49,6 +52,7 @@ public class UserService : IUserService
         IPasswordHashService passwordHashService,
         IAuthService authService,
         IFileStorage fileStorage,
+        IUserContext userContext,
         IOptions<JwtOptions> options,
         TimeProvider timeProvider)
     {
@@ -57,8 +61,22 @@ public class UserService : IUserService
         _passwordHashService = passwordHashService;
         _authService = authService;
         _fileStorage = fileStorage;
+        _userContext = userContext;
         _timeProvider = timeProvider;
         _options = options.Value;
+    }
+
+    /// <inheritdoc/>
+    public AuthorizedUserDto GetAuthorizedUser()
+    {
+        return new AuthorizedUserDto
+        {
+            Id = _userContext.Id,
+            FirstName = _userContext.FirstName,
+            LastName = _userContext.LastName,
+            Role = _userContext.Role,
+            Email = _userContext.Email
+        };
     }
 
     /// <inheritdoc/>
@@ -96,6 +114,42 @@ public class UserService : IUserService
         await _dbContext.SaveChangesAsync(cancellationToken);
 
         _logger.LogInformation("Refresh token for user with id {Id} created", refreshToken.UserId);
+
+        return tokensPair;
+    }
+
+    /// <inheritdoc/>
+    public void Logout()
+    {
+        _authService.SignOut();
+    }
+
+    /// <inheritdoc/>
+    public async Task<TokensPairDto> RefreshTokensPairAsync(string refreshToken, CancellationToken cancellationToken)
+    {
+        var refreshTokenFromDb = await _dbContext.RefreshTokens.FirstOrDefaultAsync(x => x.Token == refreshToken, cancellationToken);
+
+        if (refreshTokenFromDb is null || refreshTokenFromDb.ExpiryDate < _timeProvider.GetUtcNow())
+        {
+            throw new UnauthorizedException();
+        }
+
+        var user = await _dbContext.Users.FirstOrDefaultAsync(x => x.Id == refreshTokenFromDb.UserId, cancellationToken);
+
+        var userDto = new AuthUserDto
+        {
+            Id = user!.Id,
+            FirstName = user.FirstName,
+            LastName = user.LastName,
+            Role = user.Role,
+            Email = user.Email,
+            RememberMe = refreshTokenFromDb.RememberMe
+        };
+
+        var tokensPair = _authService.SignIn(userDto, _options.LifeTime);
+        refreshTokenFromDb.Token = tokensPair.RefreshToken;
+
+        await _dbContext.SaveChangesAsync(cancellationToken);
 
         return tokensPair;
     }

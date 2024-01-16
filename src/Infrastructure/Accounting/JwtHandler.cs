@@ -34,7 +34,7 @@ public class JwtHandler : IJwtHandler
     }
 
     /// <inheritdoc/>
-    public string GenerateJwt(UserDto userDto, TimeSpan tokenLifeTime)
+    public string GenerateJwt(AuthUserDto userDto, TimeSpan tokenLifeTime)
     {
         var claimsPrincipal = GetPrincipal(userDto);
 
@@ -62,7 +62,7 @@ public class JwtHandler : IJwtHandler
     }
 
     /// <inheritdoc/>
-    public ClaimsPrincipal GetPrincipal(UserDto userDto)
+    public ClaimsPrincipal GetPrincipal(AuthUserDto userDto)
     {
         var claims = new List<Claim>
         {
@@ -77,11 +77,11 @@ public class JwtHandler : IJwtHandler
     }
 
     /// <inheritdoc/>
-    public UserDto DecodeToken(string userToken)
+    public AuthUserDto DecodeToken(string userToken)
     {
         var claims = ValidateToken(userToken, _options.Key).Claims;
 
-        return new UserDto
+        return new AuthUserDto
         {
             Id = long.TryParse(claims.First(x => x.Type == ConstsClaims.ID).Value, out var userId)
                 ? userId

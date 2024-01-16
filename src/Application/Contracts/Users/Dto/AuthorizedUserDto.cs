@@ -1,11 +1,11 @@
 using Domain.Enums;
 
-namespace Application.Common.Accounting.Dto;
+namespace Application.Contracts.Users.Dto;
 
 /// <summary>
-/// Информация о пользователе.
+/// Информация об авторизованном пользователе.
 /// </summary>
-public class UserDto
+public class AuthorizedUserDto
 {
     /// <summary>
     /// Уникальный идентификатор.
@@ -31,19 +31,4 @@ public class UserDto
     /// Электронная почта.
     /// </summary>
     public required string Email { get; set; }
-
-    /// <summary>
-    /// Токен доступа.
-    /// </summary>
-    public string? AccessToken { get; set; }
-
-    /// <summary>
-    /// Токен обновления JWT + Refresh Token.
-    /// </summary>
-    public string? RefreshToken { get; set; }
-
-    /// <summary>
-    /// Чек-бокс "Запомнить меня".
-    /// </summary>
-    public bool RememberMe { get; set; }
 }

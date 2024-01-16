@@ -24,6 +24,6 @@ public static class ServiceCollectionExtensions
     /// <param name="services">Контракт для коллекции сервисов.</param>
     public static void TryAddHttpContextWrapper(this IServiceCollection services)
     {
-        services.TryAddScoped<IHttpContextWrapper, HttpContextWrapper>();
+        services.TryAddSingleton<IHttpContextWrapper, HttpContextWrapper>();
     }
 }

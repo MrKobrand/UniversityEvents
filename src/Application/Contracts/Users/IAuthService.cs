@@ -1,7 +1,6 @@
 using System;
+using Application.Common.Accounting.Dto;
 using Application.Contracts.Users.Dto;
-
-using AuthUserDto = Application.Common.Accounting.Dto.UserDto;
 
 namespace Application.Contracts.Users;
 

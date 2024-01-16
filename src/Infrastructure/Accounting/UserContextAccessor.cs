@@ -10,7 +10,7 @@ namespace Infrastructure.Accounting;
 /// </summary>
 public class UserContextAccessor : IUserContextAccessor, IUserContext
 {
-    private UserDto? _currentUser;
+    private AuthUserDto? _currentUser;
 
     /// <inheritdoc/>
     public long Id => _currentUser?.Id ?? default;
@@ -37,7 +37,7 @@ public class UserContextAccessor : IUserContextAccessor, IUserContext
     public bool RememberMe => _currentUser?.RememberMe ?? default;
 
     /// <inheritdoc/>
-    public void SetCurrentUser(UserDto userDto)
+    public void SetCurrentUser(AuthUserDto userDto)
     {
         if (_currentUser is null)
         {

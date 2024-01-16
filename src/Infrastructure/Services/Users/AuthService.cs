@@ -1,13 +1,12 @@
 using System;
 using Application.Common.Accounting;
+using Application.Common.Accounting.Dto;
 using Application.Common.Interfaces;
 using Application.Contracts.Users;
 using Application.Contracts.Users.Dto;
 using Infrastructure.Configuration;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
-
-using AuthUserDto = Application.Common.Accounting.Dto.UserDto;
 
 namespace Infrastructure.Services.Users;
 

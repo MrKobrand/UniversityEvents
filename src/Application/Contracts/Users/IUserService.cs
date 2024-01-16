@@ -11,6 +11,25 @@ namespace Application.Contracts.Users;
 public interface IUserService
 {
     /// <summary>
+    /// Получает авторизованного пользователя.
+    /// </summary>
+    /// <returns>Информация об авторизованном пользователе.</returns>
+    AuthorizedUserDto GetAuthorizedUser();
+
+    /// <summary>
+    /// Выходит из системы.
+    /// </summary>
+    void Logout();
+
+    /// <summary>
+    /// Обновляет пару JWT + RT токенов.
+    /// </summary>
+    /// <param name="refreshToken">Refresh токен.</param>
+    /// <param name="cancellationToken">Токен отмены операции.</param>
+    /// <returns>Обновленная пара JWT + RT токенов.</returns>
+    Task<TokensPairDto> RefreshTokensPairAsync(string refreshToken, CancellationToken cancellationToken);
+
+    /// <summary>
     /// Предоставляет доступ пользователю к системе.
     /// </summary>
     /// <param name="request">Запрос на логин.</param>

@@ -28,6 +28,39 @@ public class UsersController : ApiControllerBase
     }
 
     /// <summary>
+    /// Получает авторизованного пользователя.
+    /// </summary>
+    /// <returns>Информация об авторизованном пользователе.</returns>
+    [HttpGet("authorized")]
+    [Authorization]
+    public AuthorizedUserDto IsAuthorized()
+    {
+        return _userService.GetAuthorizedUser();
+    }
+
+    /// <summary>
+    /// Выходит из системы.
+    /// </summary>
+    [HttpPost("[action]")]
+    [Authorization]
+    public void Logout()
+    {
+        _userService.Logout();
+    }
+
+    /// <summary>
+    /// Обновляет пару JWT + RT токенов.
+    /// </summary>
+    /// <param name="command">Параметры запроса на обновление токенов.</param>
+    /// <param name="cancellationToken">Токен отмены операции.</param>
+    /// <returns>Обновленная пара JWT + RT токенов.</returns>
+    [HttpPost("[action]")]
+    public Task<TokensPairDto> RefreshTokens([FromBody] RefreshTokensCommand command, CancellationToken cancellationToken)
+    {
+        return _userService.RefreshTokensPairAsync(command.RefreshToken, cancellationToken);
+    }
+
+    /// <summary>
     /// Входит в систему с выдачей JWT + RT токенов.
     /// </summary>
     /// <param name="command">Параметры запроса.</param>

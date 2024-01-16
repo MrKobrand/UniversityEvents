@@ -11,7 +11,7 @@ public interface IUserContextAccessor
     /// Устанавливает текущего пользователя.
     /// </summary>
     /// <param name="userDto">Информация о пользователе.</param>
-    void SetCurrentUser(UserDto userDto);
+    void SetCurrentUser(AuthUserDto userDto);
 
     /// <summary>
     /// Проверяет, установлен ли текущий пользователь.
