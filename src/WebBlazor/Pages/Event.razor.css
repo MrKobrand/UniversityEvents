@@ -1,0 +1,15 @@
+.user-name {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.user-name img {
+  width: 32px;
+  height: 32px;
+  border-radius: 100%;
+  display: block;
+  flex-shrink: 0;
+  -webkit-filter: brightness(100%);
+  object-fit: cover;
+}

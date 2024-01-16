@@ -26,7 +26,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure", "src\Infra
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Web", "src\Web\Web.csproj", "{5FA3BFDA-6341-476D-8BE0-CB89EFB0B8DD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebBlazor", "src\WebBlazor\WebBlazor.csproj", "{CFF9AE68-B3D1-4A84-987F-5E963A8A63A0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebBlazor", "src\WebBlazor\WebBlazor.csproj", "{CFF9AE68-B3D1-4A84-987F-5E963A8A63A0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,0 +1,14 @@
+@page "/{SectionId:long}/event-categories"
+
+<PageTitle>Event categories</PageTitle>
+
+<LoadingContent IsLoadingFinish="@_isLoadingFinish">
+  @foreach (var eventCategory in _eventCategories!)
+  {
+    <p>Id: @eventCategory.Id</p>
+    <p>Наименование: @eventCategory.Name</p>
+    <p>Порядок следования: @eventCategory.Order</p>
+    <button type="button" @onclick="@(() => NavigateToCategoryEvents(eventCategory.Id))">Перейти в мероприятия категории</button>
+    <hr />
+  }
+</LoadingContent>

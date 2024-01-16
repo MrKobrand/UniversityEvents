@@ -1,0 +1,69 @@
+@page "/{SectionId:long}/event-categories/{CategoryId:long}/events/{EventId:long}"
+
+<PageTitle>Event</PageTitle>
+
+<LoadingContent IsLoadingFinish="@_isLoadingFinish">
+  @if (_event is null)
+  {
+    <PageTitle>Not found</PageTitle>
+    <LayoutView Layout="@typeof(MainLayout)">
+      <p role="alert">Sorry, there's nothing at this address.</p>
+    </LayoutView>
+  }
+  else
+  {
+    <p>Id: @_event.Id</p>
+    <p>Тип: @_event.Type.ToString()</p>
+    <p>Дата и время проведения: @($"{_event.Date:G}")</p>
+    <p>Продолжительность: @_event.Duration.ToString()</p>
+    <p>Место проведения: @_event.Place</p>
+    <p>Тема: @_event.Subject</p>
+    <p>Объявление: @_event.Announcement</p>
+    <p>Контент: @_event.Content</p>
+    @if (string.IsNullOrEmpty(_event.PreviewImageLink))
+    {
+      <p>Превью: отсутствует</p>
+    }
+    else
+    {
+      <p>Превью: </p>
+      <div>
+        <img alt="Превью" src="@_event.PreviewImageLink" />
+      </div>
+    }
+    <div class="user-name">
+      <span>Автор: </span>
+      <img src="@(_event.AuthorAvatarLink ?? "emo-avatar.png")"
+           alt="@_event.AuthorLastName @_event.AuthorFirstName"
+           title="@_event.AuthorLastName @_event.AuthorFirstName">
+      <span>@($"{_event.AuthorLastName} {_event.AuthorFirstName} {_event.AuthorMiddleName}".Trim())</span>
+    </div>
+    @if (_event.Speakers.Any())
+    {
+      <p>Спикеры:</p>
+      @foreach (var speaker in _event.Speakers)
+      {
+        <div class="user-name">
+          <img src="@(speaker.AvatarLink ?? "emo-avatar.png")"
+               alt="@speaker.LastName @speaker.FirstName"
+               title="@speaker.LastName @speaker.FirstName">
+          <span>@($"{speaker.LastName} {speaker.FirstName} {speaker.MiddleName}".Trim())</span>
+        </div>
+      }
+    }
+    @if (_event.Participants.Any())
+    {
+      <p>Участники:</p>
+      @foreach (var participant in _event.Participants)
+      {
+        <div class="user-name">
+          <img src="@(participant.AvatarLink ?? "emo-avatar.png")"
+               alt="@participant.LastName @participant.FirstName"
+               title="@participant.LastName @participant.FirstName">
+          <span>@($"{participant.LastName} {participant.FirstName} {participant.MiddleName}".Trim())</span>
+        </div>
+      }
+    }
+    <hr />
+  }
+</LoadingContent>

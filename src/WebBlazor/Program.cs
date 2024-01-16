@@ -7,8 +7,12 @@ using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using WebBlazor.Data.Extensions;
 using WebBlazor.Services.Authorization.Extensions;
+using WebBlazor.Services.EventCategories.Extensions;
+using WebBlazor.Services.Events.Extensions;
+using WebBlazor.Services.EventSections.Extensions;
 using WebBlazor.Services.LocalStorage.Extensions;
 using WebBlazor.Services.Navigation.Extensions;
+using WebBlazor.Services.Users.Extensions;
 
 namespace WebBlazor;
 
@@ -36,6 +40,11 @@ public class Program
         builder.Services.TryAddNavigationServices();
         builder.Services.TryAddAuthorizationService();
         builder.Services.TryAddUniversityEventsLocalStorageService();
+
+        builder.Services.TryAddEventSectionService();
+        builder.Services.TryAddEventCategoryService();
+        builder.Services.TryAddEventService();
+        builder.Services.TryAddUserService();
 
         await builder.Build().RunAsync();
     }

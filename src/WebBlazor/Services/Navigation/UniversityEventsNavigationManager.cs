@@ -8,10 +8,10 @@ namespace WebBlazor.Services.Navigation;
 /// </summary>
 public class UniversityEventsNavigationManager : IUniversityEventsNavigationManager
 {
-    private readonly NavigationManager _navigationManager;
-
     private const string HOME_PAGE = "/";
     private const string LOGIN_PAGE = "/login";
+
+    private readonly NavigationManager _navigationManager;
 
     /// <summary>
     /// Конструктор, подтягивающий зависимости через DI.

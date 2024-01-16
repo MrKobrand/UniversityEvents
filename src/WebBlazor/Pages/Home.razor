@@ -1,7 +1,15 @@
-﻿@page "/"
+@page "/"
 
-<PageTitle>Home</PageTitle>
+<PageTitle>Event sections</PageTitle>
 
-<h1>Hello, world!</h1>
-
-Welcome to your new app.
+<LoadingContent IsLoadingFinish="@_isLoadingFinish">
+  @foreach (var eventSection in _eventSections)
+  {
+    <p>Id: @eventSection.Id</p>
+    <p>Наименование: @eventSection.Name</p>
+    <p>Описание: @eventSection.Description</p>
+    <p>Порядок следования: @eventSection.Order</p>
+    <button type="button" @onclick="@(() => NavigateToSectionCategories(eventSection.Id))">Перейти в категории раздела</button>
+    <hr />
+  }
+</LoadingContent>

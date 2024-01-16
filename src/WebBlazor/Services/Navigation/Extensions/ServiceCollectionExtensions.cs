@@ -16,5 +16,8 @@ public static class ServiceCollectionExtensions
     public static void TryAddNavigationServices(this IServiceCollection services)
     {
         services.TryAddSingleton<IUniversityEventsNavigationManager, UniversityEventsNavigationManager>();
+        services.TryAddSingleton<IEventCategoryNavigationManager, EventCategoryNavigationManager>();
+        services.TryAddSingleton<IEventNavigationManager, EventNavigationManager>();
+        services.TryAddSingleton<IUserNavigationManager, UserNavigationManager>();
     }
 }
