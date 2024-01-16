@@ -5,6 +5,10 @@ using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using WebBlazor.Data.Extensions;
+using WebBlazor.Services.Authorization.Extensions;
+using WebBlazor.Services.LocalStorage.Extensions;
+using WebBlazor.Services.Navigation.Extensions;
 
 namespace WebBlazor;
 
@@ -26,6 +30,12 @@ public class Program
         builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
         builder.Services.AddAuthorizationCore();
         builder.Services.AddBlazoredLocalStorage();
+
+        builder.Services.TryAddAuthenticationStateProvider();
+        builder.Services.TryAddHttpRepositories();
+        builder.Services.TryAddNavigationServices();
+        builder.Services.TryAddAuthorizationService();
+        builder.Services.TryAddUniversityEventsLocalStorageService();
 
         await builder.Build().RunAsync();
     }
