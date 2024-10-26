@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MobileMaui.MainPage">
+
+    <ScrollView>
+        <CollectionView ItemsSource="{Binding EventSections}">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <StackLayout Padding="10">
+                        <Label Text="{Binding Id, StringFormat='Id: {0}'}" />
+                        <Label Text="{Binding Name, StringFormat='Наименование: {0}'}" />
+                        <Label Text="{Binding Description, StringFormat='Описание: {0}'}" />
+                        <Label Text="{Binding Order, StringFormat='Порядок следования: {0}'}" />
+                        <Button Text="Перейти в категории раздела"
+                            Command="{Binding Source={x:Reference YourPage}, Path=BindingContext.NavigateToSectionCategoriesCommand}"
+                            CommandParameter="{Binding Id}" />
+                        <BoxView Margin="0, 5, 0, 0" HeightRequest="1" Color="Gray" />
+                    </StackLayout>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </ScrollView>
+
+</ContentPage>
