@@ -1,44 +1,27 @@
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Windows.Input;
 using MobileMaui.Contracts.EventSections;
 using MobileMaui.Contracts.EventSections.Dto;
+using MobileMaui.Pages;
 
 namespace MobileMaui;
 
 public partial class MainPage : ContentPage
 {
+    private readonly IServiceProvider _serviceProvider;
     private readonly IEventSectionService _eventSectionService;
 
     public ObservableCollection<EventSectionDto> EventSections { get; set; }
-    public ICommand NavigateToSectionCategoriesCommand { get; }
 
-    public MainPage(IEventSectionService eventSectionService)
+    public MainPage(IServiceProvider serviceProvider, IEventSectionService eventSectionService)
     {
         InitializeComponent();
+
+        _serviceProvider = serviceProvider;
         _eventSectionService = eventSectionService;
 
         EventSections = new ObservableCollection<EventSectionDto>();
-        NavigateToSectionCategoriesCommand = new Command<int>(NavigateToSectionCategories);
         BindingContext = this;
-    }
-
-    private async Task InitializeAsync()
-    {
-        try
-        {
-            var sections = await _eventSectionService.GetListAsync();
-            foreach (var section in sections)
-            {
-                EventSections.Add(section);
-            }
-        }
-        catch (Exception ex)
-        {
-            // Логируем ошибку
-            Debug.WriteLine($"Error during an initialization: {ex.Message}");
-            await DisplayAlert("Ошибка", ex.Message, "OK");
-        }
     }
 
     protected override async void OnAppearing()
@@ -47,8 +30,35 @@ public partial class MainPage : ContentPage
         await InitializeAsync();
     }
 
-    private void NavigateToSectionCategories(int sectionId)
+    private async Task InitializeAsync()
     {
-        // Логика для перехода в категории раздела
+        EventSections.Clear();
+
+        try
+        {
+            var sections = await _eventSectionService.GetListAsync();
+
+            foreach (var section in sections)
+            {
+                EventSections.Add(section);
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"Error during an initialization: {ex.Message}");
+            await DisplayAlert("Ошибка", ex.Message, "OK");
+        }
+    }
+
+    private async void NavigateToSectionCategories(object sender, EventArgs e)
+    {
+        var button = sender as Button;
+
+        if (button?.CommandParameter is long sectionId)
+        {
+            var eventCategoriesPage = _serviceProvider.GetRequiredService<EventCategoriesPage>();
+            await eventCategoriesPage.InitializeAsync(sectionId);
+            await Navigation.PushAsync(eventCategoriesPage);
+        }
     }
 }

@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace MobileMaui.Services.UniversityEvents.Models;
+namespace MobileMaui.Services.UniversityEvents.Models.EventSections;
 
 public class GetEventSectionsListUniversityEventsRequest
 {

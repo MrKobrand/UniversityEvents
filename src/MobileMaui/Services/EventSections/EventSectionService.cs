@@ -2,7 +2,7 @@ using Microsoft.Extensions.Logging;
 using MobileMaui.Contracts.EventSections;
 using MobileMaui.Contracts.EventSections.Dto;
 using MobileMaui.Services.UniversityEvents;
-using MobileMaui.Services.UniversityEvents.Models;
+using MobileMaui.Services.UniversityEvents.Models.EventSections;
 
 namespace MobileMaui.Services.EventSections;
 

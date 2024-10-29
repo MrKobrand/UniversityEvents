@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="MobileMaui.MainPage"
-             Title="Разделы мероприятий">
+             x:Class="MobileMaui.Pages.EventsPage"
+             Title="Мероприятия категории">
 
     <ScrollView>
-        <CollectionView ItemsSource="{Binding EventSections}">
+        <CollectionView ItemsSource="{Binding Events}">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
                     <VerticalStackLayout Padding="10" Spacing="10">
                         <Label Text="{Binding Id, StringFormat='Id: {0}'}" />
-                        <Label Text="{Binding Name, StringFormat='Наименование: {0}'}" />
-                        <Label Text="{Binding Description, StringFormat='Описание: {0}'}" />
-                        <Label Text="{Binding Order, StringFormat='Порядок следования: {0}'}" />
-                        <Button Text="Перейти в категории раздела"
-                                Clicked="NavigateToSectionCategories"
+                        <Label Text="{Binding Subject, StringFormat='Тема: {0}'}" />
+                        <Label Text="{Binding Announcement, StringFormat='Объявление: {0}'}" />
+                        <Label Text="{Binding Date, StringFormat='Дата и время проведения: {0:G}'}" />
+                        <Button Text="Перейти на мероприятие"
+                                Clicked="NavigateToEvent"
                                 CommandParameter="{Binding Id}" />
                         <BoxView Margin="0, 5, 0, 0" HeightRequest="1" Color="Gray" />
                     </VerticalStackLayout>

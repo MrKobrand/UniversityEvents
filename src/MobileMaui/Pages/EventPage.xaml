@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             x:Class="MobileMaui.Pages.EventPage"
+             Title="Мероприятие">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="10" Spacing="10">
+            <Label Text="{Binding Id, StringFormat='Id: {0}'}" />
+            <Label Text="{Binding Type, StringFormat='Тип: {0}'}" />
+            <Label Text="{Binding Date, StringFormat='Дата и время проведения: {0:G}'}" />
+            <Label Text="{Binding Duration, StringFormat='Продолжительность: {0}'}" />
+            <Label Text="{Binding Place, StringFormat='Место проведения: {0}'}" />
+            <Label Text="{Binding Subject, StringFormat='Тема: {0}'}" />
+            <Label Text="{Binding Announcement, StringFormat='Объявление: {0}'}" />
+            <Label Text="{Binding Content, StringFormat='Контент: {0}'}" />
+
+            <Label Text="Превью:" />
+            <Image Source="{Binding PreviewImageData, Converter={StaticResource ByteArrayToImageSourceConverter}}"
+                   IsVisible="{Binding PreviewImageData, Converter={StaticResource NullToBooleanConverter}}"
+                   Aspect="AspectFill" />
+            <Label Text="отсутствует"
+                   IsVisible="{Binding PreviewImageData, Converter={StaticResource NullToBooleanConverter}, ConverterParameter=false}" />
+
+            <StackLayout Orientation="Horizontal" VerticalOptions="Center">
+                <Label Text="Автор: " />
+                <Image Source="{Binding AuthorAvatarData, Converter={StaticResource ByteArrayToImageSourceConverter}, TargetNullValue='emo_avatar.png'}"
+                       WidthRequest="30" HeightRequest="30" 
+                       Aspect="AspectFill" />
+                <Label>
+                    <Label.Text>
+                        <MultiBinding Converter="{StaticResource FullNameConverter}">
+                            <Binding Path="AuthorLastName" />
+                            <Binding Path="AuthorFirstName" />
+                            <Binding Path="AuthorMiddleName" />
+                        </MultiBinding>
+                    </Label.Text>
+                </Label>
+            </StackLayout>
+
+            <Label Text="Спикеры:" />
+            <StackLayout>
+                <CollectionView ItemsSource="{Binding Speakers}">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <StackLayout Orientation="Horizontal">
+                                <Image Source="{Binding AvatarData, Converter={StaticResource ByteArrayToImageSourceConverter}, TargetNullValue='emo_avatar.png'}"
+                                       WidthRequest="30" HeightRequest="30"
+                                       Aspect="AspectFill" />
+                                <Label>
+                                    <Label.Text>
+                                        <MultiBinding Converter="{StaticResource FullNameConverter}">
+                                            <Binding Path="LastName" />
+                                            <Binding Path="FirstName" />
+                                            <Binding Path="MiddleName" />
+                                        </MultiBinding>
+                                    </Label.Text>
+                                </Label>
+                            </StackLayout>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </StackLayout>
+
+            <Label Text="Участники:" />
+            <StackLayout>
+                <CollectionView ItemsSource="{Binding Participants}">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <StackLayout Orientation="Horizontal">
+                                <Image Source="{Binding AvatarData, Converter={StaticResource ByteArrayToImageSourceConverter}, TargetNullValue='emo_avatar.png'}"
+                                       WidthRequest="30" HeightRequest="30"
+                                       Aspect="AspectFill" />
+                                <Label>
+                                    <Label.Text>
+                                        <MultiBinding Converter="{StaticResource FullNameConverter}">
+                                            <Binding Path="LastName" />
+                                            <Binding Path="FirstName" />
+                                            <Binding Path="MiddleName" />
+                                        </MultiBinding>
+                                    </Label.Text>
+                                </Label>
+                            </StackLayout>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </StackLayout>
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

@@ -1,14 +1,13 @@
-using MobileMaui.Contracts.EventSections;
-
 namespace MobileMaui;
 
 public partial class App : Application
 {
-    public App(IEventSectionService eventSectionService)
+    public App(IServiceProvider serviceProvider)
     {
         InitializeComponent();
 
-        MainPage = new MainPage(eventSectionService);
-        //MainPage = new AppShell();
+        var mainPage = serviceProvider.GetRequiredService<MainPage>();
+
+        MainPage = new NavigationPage(mainPage);
     }
 }

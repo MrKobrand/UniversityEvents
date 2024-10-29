@@ -1,6 +1,9 @@
 using System.Reflection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using MobileMaui.Pages;
+using MobileMaui.Services.EventCategories.Extensions;
+using MobileMaui.Services.Events.Extensions;
 using MobileMaui.Services.EventSections.Extensions;
 using MobileMaui.Services.UniversityEvents.Extensions;
 
@@ -26,6 +29,8 @@ public static class MauiProgram
         builder.Configuration.AddConfiguration(configuration);
 
         builder.Services.AddEventSectionService();
+        builder.Services.AddEventCategoryService();
+        builder.Services.AddEventService();
 
         builder.Services.AddUniversityEventsHttpClient(
             configuration.GetSection("UniversityEventsHttpClientOptions").Bind);
@@ -38,7 +43,10 @@ public static class MauiProgram
                 fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
             });
 
-        //builder.Services.AddTransient<MainPage>();
+        builder.Services.AddTransient<MainPage>();
+        builder.Services.AddTransient<EventCategoriesPage>();
+        builder.Services.AddTransient<EventsPage>();
+        builder.Services.AddTransient<EventPage>();
 
 #if DEBUG
         builder.Logging.AddDebug();
