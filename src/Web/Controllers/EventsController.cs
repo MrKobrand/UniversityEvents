@@ -46,9 +46,10 @@ public class EventsController : ApiControllerBase
     /// </summary>
     /// <param name="request">Тема мероприятия.</param>
     /// <param name="cancellationToken">Токен отмены операции.</param>
-    /// <returns>Заполненная информация от мероприятии.</returns>
+    /// <returns>Пример заполненного мероприятия.</returns>
     [HttpGet("help")]
-    public Task<string> GetHelp([FromQuery] string request, CancellationToken cancellationToken)
+    [Authorization(RoleType.Administrator)]
+    public Task<EventExampleDto> GetHelp([FromQuery] string request, CancellationToken cancellationToken)
     {
         return _eventService.GetHelpAsync(request, cancellationToken);
     }

@@ -1,5 +1,7 @@
 using Infrastructure.Accounting.Extensions;
+using Infrastructure.Configuration;
 using Infrastructure.Data.Extensions;
+using Infrastructure.Extensions;
 using Infrastructure.Services.DuckDuckGoAI.Extensions;
 using Infrastructure.Services.EventCategories.Extensions;
 using Infrastructure.Services.Events.Extensions;
@@ -27,6 +29,7 @@ public static class DependencyInjection
     {
         services.AddUniversityEventsDbContext(configuration.GetConnectionString("UniversityEventsDbContext"));
         services.AddDuckDuckGoAIHttpClient(configuration.GetSection("DuckDuckGoAIHttpClientOptions").Bind);
+        services.BindOptionsFromConfiguration<MessageTemplateOptions>();
 
         services.TryAddAuthorization();
         services.TryAddEventSectionService();

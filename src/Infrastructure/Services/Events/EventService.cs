@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.Common.Files;
@@ -11,10 +13,12 @@ using Application.Contracts.Events.Dto;
 using Domain.Common;
 using Domain.Entities;
 using Domain.Enums;
+using Infrastructure.Configuration;
 using Infrastructure.Services.DuckDuckGoAI;
 using Infrastructure.Services.Events.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace Infrastructure.Services.Events;
 
@@ -28,6 +32,14 @@ public class EventService : IEventService
     private readonly IFileStorage _fileStorage;
     private readonly IEnumService _enumService;
     private readonly IDuckDuckGoAIHttpClient _duckDuckGoAIHttpClient;
+    private readonly MessageTemplateOptions _options;
+    private readonly JsonSerializerOptions _jsonSerializerOptions = new JsonSerializerOptions
+    {
+        Converters =
+        {
+            new JsonStringEnumConverter()
+        }
+    };
 
     /// <summary>
     /// Конструктор, подтягивающий зависимости через DI.
@@ -37,18 +49,21 @@ public class EventService : IEventService
     /// <param name="fileStorage">Сервис для работы с файловым хранилищем.</param>
     /// <param name="enumService">Сервис для работы с перечислениями.</param>
     /// <param name="duckDuckGoAIHttpClient">Http-клиент для работы с DuckDuckGo AI Chat.</param>
+    /// <param name="options">Опции настроек шаблонов сообщений.</param>
     public EventService(
         ILogger<EventService> logger,
         IUniversityEventsDbContext dbContext,
         IFileStorage fileStorage,
         IEnumService enumService,
-        IDuckDuckGoAIHttpClient duckDuckGoAIHttpClient)
+        IDuckDuckGoAIHttpClient duckDuckGoAIHttpClient,
+        IOptions<MessageTemplateOptions> options)
     {
         _logger = logger;
         _dbContext = dbContext;
         _fileStorage = fileStorage;
         _enumService = enumService;
         _duckDuckGoAIHttpClient = duckDuckGoAIHttpClient;
+        _options = options.Value;
     }
 
     /// <inheritdoc/>
@@ -69,10 +84,24 @@ public class EventService : IEventService
     }
 
     /// <inheritdoc/>
-    public Task<string> GetHelpAsync(string request, CancellationToken cancellationToken)
+    public async Task<EventExampleDto> GetHelpAsync(string request, CancellationToken cancellationToken)
     {
         _logger.LogTrace("<GetHelpAsync>: {Request}", request);
-        return _duckDuckGoAIHttpClient.GetAnswerAsync(request, cancellationToken);
+
+        var message = string.Format(_options.EventHelp, request);
+
+        var answer = await _duckDuckGoAIHttpClient.GetAnswerAsync(message, cancellationToken);
+
+        var eventExample = JsonSerializer.Deserialize<EventExampleDto>(answer, _jsonSerializerOptions);
+
+        if (eventExample is null)
+        {
+            throw new ArgumentNullException(
+                nameof(eventExample),
+                "Cannot deserialize DuckDuckGo AI answer to EventExampleDto");
+        }
+
+        return eventExample;
     }
 
     /// <inheritdoc/>

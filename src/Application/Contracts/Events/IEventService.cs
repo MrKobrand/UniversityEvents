@@ -25,8 +25,8 @@ public interface IEventService
     /// </summary>
     /// <param name="request">Тема мероприятия.</param>
     /// <param name="cancellationToken">Токен отмены операции.</param>
-    /// <returns>Заполненная информация от мероприятии.</returns>
-    Task<string> GetHelpAsync(string request, CancellationToken cancellationToken);
+    /// <returns>Пример заполненного мероприятия.</returns>
+    Task<EventExampleDto> GetHelpAsync(string request, CancellationToken cancellationToken);
 
     /// <summary>
     /// Получает список мероприятий.
