@@ -42,6 +42,18 @@ public class EventsController : ApiControllerBase
     }
 
     /// <summary>
+    /// Получает подсказку от ИИ для заполнения содержания мероприятия при его создании.
+    /// </summary>
+    /// <param name="request">Тема мероприятия.</param>
+    /// <param name="cancellationToken">Токен отмены операции.</param>
+    /// <returns>Заполненная информация от мероприятии.</returns>
+    [HttpGet("help")]
+    public Task<string> GetHelp([FromQuery] string request, CancellationToken cancellationToken)
+    {
+        return _eventService.GetHelpAsync(request, cancellationToken);
+    }
+
+    /// <summary>
     /// Получает список мероприятий.
     /// </summary>
     /// <param name="limit">Лимит сущностей.</param>

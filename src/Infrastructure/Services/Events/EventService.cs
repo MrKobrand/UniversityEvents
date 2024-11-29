@@ -11,6 +11,7 @@ using Application.Contracts.Events.Dto;
 using Domain.Common;
 using Domain.Entities;
 using Domain.Enums;
+using Infrastructure.Services.DuckDuckGoAI;
 using Infrastructure.Services.Events.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -26,6 +27,7 @@ public class EventService : IEventService
     private readonly IUniversityEventsDbContext _dbContext;
     private readonly IFileStorage _fileStorage;
     private readonly IEnumService _enumService;
+    private readonly IDuckDuckGoAIHttpClient _duckDuckGoAIHttpClient;
 
     /// <summary>
     /// Конструктор, подтягивающий зависимости через DI.
@@ -34,16 +36,19 @@ public class EventService : IEventService
     /// <param name="dbContext">Контекст базы данных.</param>
     /// <param name="fileStorage">Сервис для работы с файловым хранилищем.</param>
     /// <param name="enumService">Сервис для работы с перечислениями.</param>
+    /// <param name="duckDuckGoAIHttpClient">Http-клиент для работы с DuckDuckGo AI Chat.</param>
     public EventService(
         ILogger<EventService> logger,
         IUniversityEventsDbContext dbContext,
         IFileStorage fileStorage,
-        IEnumService enumService)
+        IEnumService enumService,
+        IDuckDuckGoAIHttpClient duckDuckGoAIHttpClient)
     {
         _logger = logger;
         _dbContext = dbContext;
         _fileStorage = fileStorage;
         _enumService = enumService;
+        _duckDuckGoAIHttpClient = duckDuckGoAIHttpClient;
     }
 
     /// <inheritdoc/>
@@ -61,6 +66,13 @@ public class EventService : IEventService
             .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
 
         return @event?.ToDetailedDto();
+    }
+
+    /// <inheritdoc/>
+    public Task<string> GetHelpAsync(string request, CancellationToken cancellationToken)
+    {
+        _logger.LogTrace("<GetHelpAsync>: {Request}", request);
+        return _duckDuckGoAIHttpClient.GetAnswerAsync(request, cancellationToken);
     }
 
     /// <inheritdoc/>

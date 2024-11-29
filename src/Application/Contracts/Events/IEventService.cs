@@ -21,6 +21,14 @@ public interface IEventService
     Task<DetailedEventDto?> GetAsync(long id, CancellationToken cancellationToken);
 
     /// <summary>
+    /// Получает подсказку от ИИ для заполнения содержания мероприятия при его создании.
+    /// </summary>
+    /// <param name="request">Тема мероприятия.</param>
+    /// <param name="cancellationToken">Токен отмены операции.</param>
+    /// <returns>Заполненная информация от мероприятии.</returns>
+    Task<string> GetHelpAsync(string request, CancellationToken cancellationToken);
+
+    /// <summary>
     /// Получает список мероприятий.
     /// </summary>
     /// <param name="limit">Лимит сущностей.</param>

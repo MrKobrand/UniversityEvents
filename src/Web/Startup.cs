@@ -48,7 +48,6 @@ public class Startup
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
         app.UseRouting();
-        app.UseAuthentication();
 
         if (env.IsDevelopment())
         {
@@ -72,11 +71,11 @@ public class Startup
             c.DocExpansion(DocExpansion.List);
         });
 
-        app.UseExceptionHandler(opt => { });
+        app.UseExceptionHandler();
         app.UseMiddleware<ErrorLoggingMiddleware>();
 
-        app.UseHttpsRedirection();
         app.UseStaticFiles();
+        app.UseAuthentication();
         app.UseAuthorization();
         app.UseBlazorFrameworkFiles();
 
